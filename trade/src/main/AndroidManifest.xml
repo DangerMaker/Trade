@@ -10,8 +10,12 @@
         <activity android:name=".ui.other.TradeOtherServiceActivity" />
         <activity android:name=".ui.query.TradeQueryActivity" />
         <activity android:name=".ui.user.TradeShareholdersActivity" />
-        <activity android:name=".ui.user.TradeChangeMsgActivity" />
-        <activity android:name=".ui.user.TradeChangePwdActivity" />
+        <activity android:name=".ui.user.TradeChangeMsgActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|stateUnchanged"
+            />
+        <activity android:name=".ui.user.TradeChangePwdActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|stateUnchanged"
+            />
         <activity android:name=".ui.vote.TradeNetVoteActivity" />
         <activity android:name=".ui.trade.TradeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|stateUnchanged" />
@@ -19,6 +23,13 @@
             android:windowSoftInputMode="stateAlwaysHidden|stateUnchanged"
             />
         <activity android:name=".ui.user.TradeRiskLevelActivity" />
+        <activity android:name=".ui.query.TradeQueryDealActivity" />
+        <activity android:name=".ui.query.TradeQueryEntrustActivity" />
+        <activity android:name=".ui.bank.TradeBank2SecurityActivity" />
+        <activity android:name=".ui.bank.TradeBankQueryActivity" />
+        <activity android:name=".ui.bank.TradeFundLeftActivity" />
+        <activity android:name=".ui.bank.TradeMyFundsActivity" />
+        <activity android:name=".ui.bank.TradeSecurity2BankActivity" />
 
     </application>
     

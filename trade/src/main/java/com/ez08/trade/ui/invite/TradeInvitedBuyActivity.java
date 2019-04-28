@@ -26,8 +26,8 @@ public class TradeInvitedBuyActivity extends BaseActivity implements View.OnClic
     SlidingTabLayout sliding_tabs;
     ImageView backBtn;
 
-    TradeOptionFragment fragment1;
-    TradeOptionFragment fragment2;
+    TradeDeclareFragment fragment1;
+    TradeDeclareFragment fragment2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,12 +41,12 @@ public class TradeInvitedBuyActivity extends BaseActivity implements View.OnClic
         mFragmentList = new ArrayList<>();
         if (savedInstanceState != null) {
             if (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 0) != null)
-                fragment1 = (TradeOptionFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 0);
+                fragment1 = (TradeDeclareFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 0);
             if (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 1) != null)
-                fragment2 = (TradeOptionFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 1);
+                fragment2 = (TradeDeclareFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 1);
         } else {
-            fragment1 = TradeOptionFragment.newInstance();
-            fragment2 = TradeOptionFragment.newInstance();
+            fragment1 = TradeDeclareFragment.newInstance();
+            fragment2 = TradeDeclareFragment.newInstance();
         }
 
         mFragmentList.clear();

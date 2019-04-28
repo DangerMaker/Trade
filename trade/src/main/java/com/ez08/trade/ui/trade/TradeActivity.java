@@ -51,8 +51,8 @@ public class TradeActivity extends IntervalActivity implements View.OnClickListe
                 fragment4 = (TradeHandFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 3);
 
         } else {
-            fragment1 = TradeOptionFragment.newInstance();
-            fragment2 = TradeOptionFragment.newInstance();
+            fragment1 = TradeOptionFragment.newInstance(0);
+            fragment2 = TradeOptionFragment.newInstance(1);
             fragment3 = TradeCancelFragment.newInstance();
             fragment4 = TradeHandFragment.newInstance();
         }

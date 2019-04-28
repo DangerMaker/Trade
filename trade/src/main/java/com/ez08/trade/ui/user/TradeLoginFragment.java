@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ez08.trade.R;
+import com.ez08.trade.net.Client;
 import com.ez08.trade.tools.ActivityCallback;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.view.BlueUnderLineClickableSpan;
@@ -50,6 +51,8 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         },builder.length() - 4,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         registerBtn.setText(builder);
         registerBtn.setMovementMethod(LinkMovementMethod.getInstance());
+
+        Client.connect();
 
     }
 

@@ -1,5 +1,6 @@
 package com.ez08.trade.ui.bank;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +11,10 @@ import android.widget.TextView;
 
 import com.ez08.trade.R;
 import com.ez08.trade.ui.BaseActivity;
+import com.ez08.trade.ui.BaseAdapter;
+import com.ez08.trade.ui.query.TradeQueryActivity;
+import com.ez08.trade.ui.query.TradeQueryAdapter;
+import com.ez08.trade.ui.query.TradeQueryEntrustActivity;
 import com.ez08.trade.ui.trade.adpater.TradeMainAdapter;
 import com.ez08.trade.ui.trade.entity.TradeOtherEntity;
 import com.ez08.trade.ui.view.LinearItemDecoration;
@@ -25,7 +30,7 @@ public class TradeBankActivity extends BaseActivity implements View.OnClickListe
     GridLayoutManager manager;
     List<Object> mList;
 
-    TradeMainAdapter adapter;
+    TradeQueryAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +50,7 @@ public class TradeBankActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        adapter = new TradeMainAdapter(this);
+        adapter = new TradeQueryAdapter(this);
         recyclerView.setAdapter(adapter);
 
         LinearItemDecoration divider = new LinearItemDecoration(this);
@@ -54,10 +59,36 @@ public class TradeBankActivity extends BaseActivity implements View.OnClickListe
         mList = new ArrayList<>();
         mList.add(new TradeOtherEntity("银行转证券"));
         mList.add(new TradeOtherEntity("证券转银行"));
-        mList.add(new TradeOtherEntity("我的资金"));
         mList.add(new TradeOtherEntity("资金余额"));
         mList.add(new TradeOtherEntity("转账查询"));
         adapter.addAll(mList);
+        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position){
+                    case 0:
+                        Intent intent1 = new Intent();
+                        intent1.setClass(TradeBankActivity.this,TradeBank2SecurityActivity.class);
+                        startActivity(intent1);
+                        break;
+                    case 1:
+                        Intent intent2 = new Intent();
+                        intent2.setClass(TradeBankActivity.this,TradeSecurity2BankActivity.class);
+                        startActivity(intent2);
+                        break;
+                    case 2:
+                        Intent intent4 = new Intent();
+                        intent4.setClass(TradeBankActivity.this,TradeFundLeftActivity.class);
+                        startActivity(intent4);
+                        break;
+                    case 3:
+                        Intent intent5 = new Intent();
+                        intent5.setClass(TradeBankActivity.this,TradeBankQueryActivity.class);
+                        startActivity(intent5);
+                        break;
+                }
+            }
+        });
     }
 
     @Override

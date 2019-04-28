@@ -2,6 +2,7 @@ package com.ez08.trade.ui.user;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.ez08.trade.R;
 import com.ez08.trade.tools.ScreenUtil;

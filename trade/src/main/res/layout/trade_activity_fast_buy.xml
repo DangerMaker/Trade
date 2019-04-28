@@ -47,6 +47,7 @@
     
     <TextView
         android:id="@+id/tips"
+        android:visibility="gone"
         android:layout_below="@id/bar_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -79,10 +80,12 @@
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/checkbox"
                 style="@style/CompassCheckBox"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/check_box_compass"
+                android:button="@null" />
 
 
             <TextView

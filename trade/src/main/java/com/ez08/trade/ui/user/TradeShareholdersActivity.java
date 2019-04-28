@@ -50,8 +50,8 @@ public class TradeShareholdersActivity extends BaseActivity implements View.OnCl
 
         mList = new ArrayList<>();
         mList.add(new TradeShareHoldersTitle());
-        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","沪市","153000"));
-        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","深市","153001"));
+//        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","沪市","153000"));
+//        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","深市","153001"));
         adapter.addAll(mList);
     }
 

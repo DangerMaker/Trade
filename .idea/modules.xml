@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Trade.iml" filepath="$PROJECT_DIR$/Trade.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/socket/socket.iml" filepath="$PROJECT_DIR$/socket/socket.iml" />
       <module fileurl="file://$PROJECT_DIR$/trade/trade.iml" filepath="$PROJECT_DIR$/trade/trade.iml" />
     </modules>
   </component>

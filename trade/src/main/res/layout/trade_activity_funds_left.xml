@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/bar_layout"
+        layout="@layout/toolbar_normal" />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="总资产"
+        android:textColor="@color/trade_input_text"
+        android:textSize="13dp" />
+
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/funds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:text="150000"
+        android:textColor="@color/trade_item_text"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="总资产"
+        android:textColor="@color/trade_input_text"
+        android:textSize="13dp" />
+
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/funds2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:text="150000"
+        android:textColor="@color/trade_item_text"
+        android:layout_marginBottom="20dp"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/trade_gray"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/trade_edit_title_custom"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="币种" />
+
+        <TextView
+            style="@style/trade_edit_title_custom"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/title"
+            android:text="人民币"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/trade_gray" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/trade_edit_title_custom"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="银行" />
+
+        <TextView
+            style="@style/trade_edit_title_custom"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/title"
+            android:text="招商银行"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/trade_gray" />
+
+
+    <Button
+        android:id="@+id/submit"
+        style="@style/trade_red_button_custom"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
+        android:text="转入证券账户" />
+</LinearLayout>

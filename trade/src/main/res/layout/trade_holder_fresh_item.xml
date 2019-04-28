@@ -8,10 +8,13 @@
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/checkbox"
         style="@style/CompassCheckBox"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/check_box_compass"
+        android:button="@null"
+        />
 
 
     <RelativeLayout
@@ -55,7 +58,7 @@
             android:text="@string/trade_fresh_available_num"
             android:textColor="@color/trade_item_text"
             android:layout_below="@id/txt_name"
-            android:textSize="15dp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/txt_num"
@@ -65,14 +68,14 @@
             android:text="可申购0股"
             android:textColor="@color/trade_input_text"
             android:layout_below="@id/txt_num_title"
-            android:textSize="15dp" />
+            android:textSize="14dp" />
 
         <RelativeLayout
             android:id="@+id/layout1"
             android:layout_below="@id/txt_name"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_width="200dp"
+            android:layout_width="170dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/trade_input_bg">

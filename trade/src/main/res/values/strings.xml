@@ -55,6 +55,11 @@
     <string name="trade_select_all">全选</string>
     <string name="trade_market_price_buy">市价买入</string>
 
+    <string name="trade_deal_time">成交时间</string>
+    <string name="trade_deal_price">成交价</string>
+    <string name="trade_deal_volume">成交量</string>
+    <string name="trade_deal_mount">成交额</string>
+
     <string name="trade_fresh_available_num">申购数量</string>
     <string name="trade_confirm_change">确认修改</string>
     <string name="trade_confirm">确认</string>
@@ -84,6 +89,13 @@
     <string name="trade_shareholders_name">股东姓名</string>
     <string name="trade_shareholders_market_type">市场类别</string>
     <string name="trade_shareholders_funds_account">资金账号</string>
+
+    <string name="trade_securities_code">证券代码</string>
+    <string name="trade_securities_name">证券名称</string>
+    <string name="trade_available_stock_num">可用股数</string>
+    <string name="trade_declare_id_code">收购人代码</string>
+    <string name="trade_declare_num">预售数量</string>
+
 
 
 </resources>

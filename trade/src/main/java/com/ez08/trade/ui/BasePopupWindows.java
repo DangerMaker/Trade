@@ -18,7 +18,6 @@ public abstract class BasePopupWindows<T> extends PopupWindow {
     public BasePopupWindows(Context context) {
         super(context);
         this.context = context;
-        this.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         container = inflater.inflate(getLayoutResource(), null);
         onCreateView(container);
@@ -27,6 +26,21 @@ public abstract class BasePopupWindows<T> extends PopupWindow {
         this.setOutsideTouchable(true);
         ColorDrawable dw = new ColorDrawable(0000000000);
         this.setBackgroundDrawable(dw);
+    }
+
+    public BasePopupWindows(Context context, int width, int height) {
+        super(context);
+        this.context = context;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container = inflater.inflate(getLayoutResource(), null);
+        onCreateView(container);
+        this.setContentView(container);
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
+        ColorDrawable dw = new ColorDrawable(0000000000);
+        this.setBackgroundDrawable(dw);
+        setWidth(width);
+        setHeight(height);
     }
 
 

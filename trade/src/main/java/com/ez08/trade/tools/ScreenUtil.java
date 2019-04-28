@@ -55,4 +55,18 @@ public class ScreenUtil {
         wm.getDefaultDisplay().getSize(point);
         return (float) point.y;
     }
+
+    public static int getIntScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        wm.getDefaultDisplay().getSize(point);
+        return point.x;
+    }
+
+    public static int getIntScreenHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        wm.getDefaultDisplay().getSize(point);
+        return point.y;
+    }
 }
