@@ -6,6 +6,8 @@
 //  Copyright © 2019年 guangguang. All rights reserved.
 //
 
+#include "cJSON.h"
+
 #ifndef Packet_TradeBase_h
 #define Packet_TradeBase_h
 
@@ -32,6 +34,21 @@ struct STradeBaseHead
     DWORD        dwRawSize;
     bool        bEncrypt;
     DWORD        dwCRC_BeforeEnc;
+    std::string toJSON()
+        {
+            cJSON *json = cJSON_CreateObject();
+
+            cJSON_AddNumberToObject(json,"wPid",wPid);
+            cJSON_AddNumberToObject(json,"dwBodyLen",dwBodyLen);
+            cJSON_AddNumberToObject(json,"dwReqId",dwReqId);
+            cJSON_AddNumberToObject(json,"btCompressFlag",btCompressFlag);
+            cJSON_AddNumberToObject(json,"dwRawSize",dwRawSize);
+            cJSON_AddNumberToObject(json,"bEncrypt",(int)bEncrypt);
+            cJSON_AddNumberToObject(json,"dwCRC_BeforeEnc",dwCRC_BeforeEnc);
+            std::string jsonstr = cJSON_Print(json);
+            cJSON_Delete(json);
+            return jsonstr;
+        }
 };
 
 //    DWORD dwCheckSum=0;
@@ -59,6 +76,18 @@ struct STradePacketKeyExchange
     BYTE    btReserved[3];
     DWORD    dwReserved[9];
     char    szGX[0];            // 有零结尾的字符串
+
+    std::string toJSON(const char * inGX)
+    {
+        cJSON *json = cJSON_CreateObject();
+
+        cJSON_AddNumberToObject(json,"dwIP",dwIP);
+        cJSON_AddNumberToObject(json,"btUseRC4",btUseRC4);
+        cJSON_AddStringToObject(json,"szGX",inGX);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 //  KEY = 通过异地的一半密钥和本地的一半密钥计算会话密钥
 

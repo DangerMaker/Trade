@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import io.netty.bootstrap.Bootstrap;
@@ -28,6 +29,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * @author Administrator
@@ -42,7 +44,7 @@ import io.netty.handler.timeout.IdleStateEvent;
  * 8、这里保存握手状态以及加密相关的所有信息，网络请求可以指示是否在握手成功后方可发送，如果是，则握手成功后自动将队列中未发送的请求进行发送
  * 9、支持确保送到发送（可以考虑用加大超时时间来实现，系统对超时时间大于一定时间的请求做持续化处理）
  */
-public class YCSocketClient implements Client{
+public class YCBizClient implements Client{
 
     private static final String tag = "YCSocketClient";
     private final static Logger logger = Logger.getLogger(tag);
@@ -56,7 +58,7 @@ public class YCSocketClient implements Client{
     public static final int STATE_HANDSHAKEED = 4;//握手成功
     private boolean mDisconnectByClient;
 
-    private int TIME_OUT = 30;
+    private int TIME_OUT = 10;
     private int mState = 0; // 状态
     private String mHost;
     private int mPort;
@@ -74,9 +76,9 @@ public class YCSocketClient implements Client{
     private Hashtable<Integer, Integer> mTimeOutTable;
     private Hashtable<ResponseCallback, IntentFilter> mListenerTable;
 
-    YCSocketClient client = this;
+    YCBizClient client = this;
 
-    public YCSocketClient(String host, int port) {
+    public YCBizClient(String host, int port) {
         mHost = host;
         mPort = port;
         mTimeOutTable = new Hashtable<>();
@@ -228,6 +230,7 @@ public class YCSocketClient implements Client{
      *
      * @return
      */
+    @Override
     public int send(YCRequest request) {
         if (request == null)
             return -1;
@@ -376,16 +379,17 @@ public class YCSocketClient implements Client{
                               List<Object> out) throws Exception {
 
             buffer.markReaderIndex();
-            if (buffer.readableBytes() < 6) {
+
+            if (buffer.readableBytes() < 19) {
                 return;
             }
             //获取包头对象
-            byte[] headdecoded = new byte[6];
+            byte[] headdecoded = new byte[19];
             buffer.readBytes(headdecoded);
-            String jsonhead = NativeTools.parseVerifyCodeHeadFromJNI(headdecoded);
+            String jsonhead = NativeTools.parseTradeHeadFromJNI(headdecoded);
             JSONObject jsonObject = new JSONObject(jsonhead);
             int pid = jsonObject.getInt("wPid");
-            int bodyLen = jsonObject.getInt("dwBodyLen");
+            int bodyLen = jsonObject.getInt("dwRawSize");
 
             //获取包体对象
             int bodylength = bodyLen;//需要换成json对应的值
@@ -445,7 +449,7 @@ public class YCSocketClient implements Client{
             mCtx = ctx;
 
             if (connectListener != null)
-                connectListener.connectSuccess(YCSocketClient.this);
+                connectListener.connectSuccess(YCBizClient.this);
             mMisHeartBeatCount = 0;
         }
 
@@ -527,38 +531,45 @@ public class YCSocketClient implements Client{
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             if (evt instanceof IdleStateEvent) {
-                mErrorMsg = "";
+//                mErrorMsg = "";
                 IdleStateEvent event = (IdleStateEvent) evt;
-
+//
                 if (event.state() == IdleState.READER_IDLE) {
-                    logger.info("定时心跳间隔触发...userEventTriggered" + ctx.channel());
-                    mLastHeartBeatTime = System.currentTimeMillis();
-                    //心跳及超时处理,
-                    if (mState == STATE_HANDSHAKEED) {//如果握手已经成功，则发送心跳包并检查队列包是否有超时的
-//                        NetPakage heartBeatPakage = new NetPakage(NetPakage.NETPAKAGE_TYPE_HEARTBEAT);
-//                        ctx.writeAndFlush(heartBeatPakage);
-                        //检查队列中的请求
 
-                    }
-                    mMisHeartBeatCount++;
-                    if (mMisHeartBeatCount > MAX_MIS_HEARTBEAT_COUNT) {
-                        //网络心跳丢失过多，断网,以触发重连机制
-                        logger.info("userEventTriggered定时心跳接收失败超过三次，断开网络..." + ctx.channel());
-                        mMisHeartBeatCount = 0;
-                        ctx.close();
-                    }
 
-                    if (getState() != STATE_HANDSHAKEED) {
-                        logger.info(" 握手超时，关闭连接");
-                        ctx.close();
-                    }
+//                    logger.info("定时心跳间隔触发...userEventTriggered" + ctx.channel());
+//                    mLastHeartBeatTime = System.currentTimeMillis();
+//                    //心跳及超时处理,
+//                    if (mState == STATE_HANDSHAKEED) {//如果握手已经成功，则发送心跳包并检查队列包是否有超时的
+////                        NetPakage heartBeatPakage = new NetPakage(NetPakage.NETPAKAGE_TYPE_HEARTBEAT);
+////                        ctx.writeAndFlush(heartBeatPakage);
+//                        //检查队列中的请求
+//
+//                    }
+//                    mMisHeartBeatCount++;
+//                    if(mMisHeartBeatCount % 5 == 0){
+                        logger.info("userEventTriggered");
+                        ctx.writeAndFlush(NativeTools.genTradeHeartPackFromJNI());
+//                    }
+
+//                    if (mMisHeartBeatCount > MAX_MIS_HEARTBEAT_COUNT) {
+//                        //网络心跳丢失过多，断网,以触发重连机制
+//                        logger.info("userEventTriggered定时心跳接收失败超过三次，断开网络..." + ctx.channel());
+//                        mMisHeartBeatCount = 0;
+//                        ctx.close();
+//                    }
+//
+//                    if (getState() != STATE_HANDSHAKEED) {
+//                        logger.info(" 握手超时，关闭连接");
+//                        ctx.close();
+//                    }
                 } else if (event.state() == IdleState.WRITER_IDLE) {
-//                    checkTimeOut();
+////                    checkTimeOut();
                 }
-            } else {
-                logger.info("EzNetHelper = " + evt.getClass().getCanonicalName() + ",异常，断开连接");
-                ctx.close();
-                mErrorMsg = evt.getClass().getCanonicalName();
+//            } else {
+//                logger.info("EzNetHelper = " + evt.getClass().getCanonicalName() + ",异常，断开连接");
+//                ctx.close();
+//                mErrorMsg = evt.getClass().getCanonicalName();
             }
 
         }

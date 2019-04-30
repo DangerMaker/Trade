@@ -3,24 +3,25 @@ package com.ez08.trade.net;
 public class YCRequest {
 
     ResponseCallback callback;
-    public int mSn;
+    public int pid;
     public long mSendTime;    //发数据的时间
     public int mTimeout;	//超时时间
+    public byte[] mData;
 
-    public YCRequest() {
+    public YCRequest(int pid) {
+        this.pid = pid;
     }
 
     public YCRequest(ResponseCallback callback) {
         this.callback = callback;
     }
 
-
     public void setCallback(ResponseCallback callback) {
         this.callback = callback;
     }
 
 
-    public void failed(YCSocketClient client) {
+    public void failed(Client client) {
         if (callback == null)
             return;
 
@@ -29,12 +30,24 @@ public class YCRequest {
         callback.callback(client, response);
     }
 
-    public void cancel(YCSocketClient client){
-//        mResult = RESULT_CANCELED;
-//        failed(client);
-        System.out.println("Sn=" + mSn + ", status = cancel");
+    public void received(Response response,Client client){
+        if(callback == null)
+            return;
+
+        response.setSucceed(true);
+        callback.callback(client, response);
     }
 
+    public void cancel(Client client){
+//        mResult = RESULT_CANCELED;
+//        failed(client);
+        System.out.println("Sn=" + pid + ", status = cancel");
+    }
+
+
+    public String parse(byte[] buffer){
+        return "";
+    }
 
     public NetPackage getNetPackage() {
         NetPackage netPackage = new NetPackage();

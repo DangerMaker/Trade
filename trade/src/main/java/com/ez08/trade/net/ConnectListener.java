@@ -2,9 +2,9 @@ package com.ez08.trade.net;
 
 public interface ConnectListener {
 
-    public void connectSuccess(YCSocketClient client);
+    public void connectSuccess(Client client);
 
-    public void connectFail(YCSocketClient client);
+    public void connectFail(Client client);
 
-    public void connectLost(YCSocketClient client);
+    public void connectLost(Client client);
 }

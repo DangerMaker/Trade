@@ -1,4 +1,4 @@
-//y
+//
 //  Packet_VerificationCode.h
 //  XFrame
 //
@@ -10,6 +10,7 @@
 #define Packet_VerificationCode_h
 
 #include "Packet_TradeBase.h"
+#include "cJSON.h"
 #pragma pack(push,1)
 #pragma warning( disable : 4200 )
 
@@ -19,6 +20,16 @@ struct SVerificationCodeHead
 {
     WORD        wPid;
     DWORD       dwBodyLen;
+    std::string toJSON()
+    {
+        cJSON *json = cJSON_CreateObject();
+
+        cJSON_AddNumberToObject(json,"wPid",wPid);
+        cJSON_AddNumberToObject(json,"dwBodyLen",dwBodyLen);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 #define        VERIFICATION_CODE_PID__KEEP_ALIVE                    (WORD(10))
@@ -37,6 +48,17 @@ struct SVerificationCodeBody_ReqPic
     char        szId[VERIFICATION_CODE_SIZE__ID+1];        //含'\0'
     DWORD        dwWidth;     //像素宽(是否起作用,根据服务器设置)
     DWORD        dwHeight;    //像素高(是否起作用,根据服务器设置)
+    std::string toJSON()
+    {
+        cJSON *json = cJSON_CreateObject();
+
+        cJSON_AddStringToObject(json,"szId",szId);
+        cJSON_AddNumberToObject(json,"dwWidth",dwWidth);
+        cJSON_AddNumberToObject(json,"dwHeight",dwHeight);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 //应答
@@ -49,8 +71,21 @@ struct SVerificationCodeBody_ReqPicA
     BYTE        yType;            //0:默认(BMP)
     DWORD        dwPicLen;        //
     BYTE        bufPic[0];
-};
+    std::string toJSON(char* bufPic)
+    {
+        cJSON *json = cJSON_CreateObject();
 
+        cJSON_AddStringToObject(json,"szId",szId);
+        cJSON_AddNumberToObject(json,"reserve",reserve);
+        cJSON_AddNumberToObject(json,"dwLife",dwLife);
+        cJSON_AddNumberToObject(json,"yType",yType);
+        cJSON_AddNumberToObject(json,"dwPicLen",dwPicLen);
+        cJSON_AddStringToObject(json,"bufPic",bufPic);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
+};
 
 
 #define        VERIFICATION_CODE_PID__CHECK_CODE                    (WORD(200))
@@ -62,7 +97,6 @@ struct SVerificationCodeBody_Check
 #define        VERIFICATION_CODE_SIZE__CODE            (size_t(8))
     char        szCode[VERIFICATION_CODE_SIZE__CODE+1];    //含'\0'
     DWORD        dwCheckId;
-    
     DWORD        reserve;
 };
 

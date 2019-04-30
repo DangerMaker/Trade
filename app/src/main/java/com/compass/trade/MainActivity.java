@@ -13,6 +13,9 @@ import com.ez08.trade.ui.user.TradeLoginFragment;
 
 public class MainActivity extends AppCompatActivity implements ActivityCallback {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
     FragmentManager fragmentManager;
     RelativeLayout container;
     TextView pageName;
@@ -28,8 +31,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
         TradeLoginFragment fragment = TradeLoginFragment.newInstance();
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
-
-    }
+        }
 
     @Override
     public void replace() {
@@ -39,4 +41,5 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
     }
+
 }
