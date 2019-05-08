@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
 import com.ez08.trade.net.Client;
+import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.ConnectListener;
 import com.ez08.trade.net.KeyExchangeRequest;
+import com.ez08.trade.net.LoginRequest;
 import com.ez08.trade.net.NativeTools;
 import com.ez08.trade.net.Response;
 import com.ez08.trade.net.ResponseCallback;
@@ -82,7 +84,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     }
 
     private void createBizClient() {
-        YCBizClient bizClient = new YCBizClient(host, Constant.BIZ_SERVER_PORT);
+        YCBizClient bizClient = ClientHelper.get();
         bizClient.setOnConnectListener(new ConnectListener() {
             @Override
             public void connectSuccess(Client client) {
@@ -103,14 +105,37 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     }
 
     private void sendHandShakePackage(Client client) {
-        KeyExchangeRequest request = new KeyExchangeRequest(101);
-        byte[] data = NativeTools.genTradePacketKeyExchangePackFromJNI();
-        request.mData = data;
+        KeyExchangeRequest request = new KeyExchangeRequest();
         request.setCallback(new ResponseCallback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
                     Log.e(TAG, data.getData());
+                    setLoginPackage(client);
+                }
+            }
+        });
+        client.send(request);
+    }
+
+    private void setLoginPackage(Client client) {
+        LoginRequest request = new LoginRequest("Z", "109000512", "123123", "1011", "123");
+        request.setCallback(new ResponseCallback() {
+            @Override
+            public void callback(Client client, Response data) {
+                if (data.isSucceed()) {
+                    Log.e(TAG, data.getData());
+                    try {
+                        JSONObject jsonObject = new JSONObject(data.getData());
+                        int succ = jsonObject.getInt("bLoginSucc");
+                        if (succ == 0) {
+                            String msg = jsonObject.getString("szErrMsg");
+                            Log.e(TAG, msg);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -202,8 +227,8 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_btn) {
-//            ((ActivityCallback) getActivity()).replace();
-            createVerityClientAndSend(1);
+            ((ActivityCallback) getActivity()).replace();
+//            createVerityClientAndSend(1);
         }
     }
 

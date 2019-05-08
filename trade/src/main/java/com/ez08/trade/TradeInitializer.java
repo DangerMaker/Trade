@@ -2,7 +2,9 @@ package com.ez08.trade;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 
+import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.ui.view.refresh.SmartRefreshLayout;
 import com.ez08.trade.ui.view.refresh.api.DefaultRefreshFooterCreator;
 import com.ez08.trade.ui.view.refresh.api.DefaultRefreshHeaderCreator;
@@ -49,7 +51,7 @@ public class TradeInitializer {
     }
 
     private void init(){
-
+        ClientHelper.init();
     }
 
 

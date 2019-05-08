@@ -197,7 +197,7 @@ public class YCSocketClient implements Client{
     public boolean startHandShake(String msg) {
         HandShakeRequest request = new HandShakeRequest(13);
         int sn = SnFactory.getSnClient();//需要获取请求序号
-        request.pid = sn;
+        request.sn = sn;
         if (mState == STATE_CONNECTED) {
             mState = STATE_HANDSHAKEING;
             mRequestTable.put(sn, request);
@@ -232,10 +232,10 @@ public class YCSocketClient implements Client{
         if (request == null)
             return -1;
 
-        mRequestTable.put(request.pid, request);
+        mRequestTable.put(request.sn, request);
         send2Net(request);
-        mTimeOutTable.put(request.pid, request.mTimeout);
-        return request.pid;
+        mTimeOutTable.put(request.sn, request.mTimeout);
+        return request.sn;
     }
 
 
@@ -394,7 +394,7 @@ public class YCSocketClient implements Client{
             }
             byte[] bodydecoded = new byte[bodylength];
             buffer.readBytes(bodydecoded);
-            String jsonbody = mRequestTable.get(pid).parse(bodydecoded);
+            String jsonbody = mRequestTable.get(pid).parse(headdecoded,bodydecoded);
             //获取图片内容,在bodydecoded内容里面,bodydecoded+VerifyCodeBodySizeB偏移
             NetPackage netPackage = new NetPackage();
             netPackage.pid = pid;

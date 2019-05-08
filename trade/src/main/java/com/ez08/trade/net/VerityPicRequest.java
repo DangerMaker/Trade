@@ -7,7 +7,7 @@ public class VerityPicRequest extends YCRequest {
     }
 
     @Override
-    public String parse(byte[] buffer) {
-       return NativeTools.parseVerifyCodeBodyAFromJNI(buffer);
+    public String parse(byte[] head,byte[] body) {
+       return NativeTools.parseVerifyCodeBodyAFromJNI(body);
     }
 }

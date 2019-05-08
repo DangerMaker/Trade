@@ -1,4 +1,4 @@
-//
+﻿//
 //  Packet_TradeGate.h
 //  XFrame
 //
@@ -10,6 +10,8 @@
 #define Packet_TradeGate_h
 
 #include "Packet_TradeBase.h"
+#include "cBase64.h"
+#include "Packet_Tools.h"
 
 #pragma pack(push,1)
 #pragma warning( disable : 4200 )
@@ -106,7 +108,7 @@ struct STradeGateHead
  0p质押出质
  1R 柜台意向买
  1S 柜台意向卖
- 
+
  1T 柜台大额做市买
  1U 柜台大额做市卖
  1V 柜台小额做市买
@@ -190,9 +192,7 @@ enum SecurityType
 
 
 
-//////////////////////////////////////////////////////////////////////////
-//
-//////////////////////////////////////////////////////////////////////////
+
 
 
 #define PID_TRADE_GATE__OK            (PID_TRADE_GATE_BASE+0)
@@ -245,6 +245,17 @@ struct STradeGateError
     DWORD    dwReqId;                    //一个socket仅支持同时存在一个未完成的请求
     DWORD    dwErrorCode;
     char    szError[0];
+    std::string toJSON(JNIEnv* env,const char* content)
+    {
+        cJSON *json = cJSON_CreateObject();
+        //
+        cJSON_AddNumberToObject(json,"dwReqId",(int)dwReqId);
+        cJSON_AddNumberToObject(json,"dwErrorCode",(int)dwErrorCode);
+        cJSON_AddStringToObject(json,"szError",NewCodedString(env,content,"GB2312",strlen(content)));
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 
@@ -276,29 +287,30 @@ struct STradeGateLogin
     char                    szVerificationId[21];
     char                    szVerificationCode[9];
     char                    szReserved[21];
+
 };
 struct STradeGateLoginAItem
 {
 #define CUSTPROP_GENERAL '0'            //普通客户
 #define CUSTPROP_AGENT     '1'            //客户代理人
 #define    CUSTPROP_BROKER     '2'            //经纪人
-    
+
     char        sz_custprop[2];            //        客户性质    custprop    char(1)
     char        sz_market[MARKET_LEN];    //        交易市场    market    char(1)
-    
+
     char        sz_secuid[SECUID_LEN];    //        股东代码    secuid    char(10)
     char        sz_name[17];            //        股东姓名    name    char(16)
     __int64        n64_fundid;                //        缺省资金帐户fundid    Int64
     __int64        n64_custid;                //        客户代码    custid    Int64    登录后送，客户端要保存，以后的业务要带这个东西
     char        sz_custname[17];        //        客户姓名    custname    char(16)
     char        sz_orgid[ORGID_LEN];    //        机构编码    orgid    char(4)      登录后送，客户端要保存，以后的业务要带这个东西
-    
+
     char        sz_timeoutflag[2];        //        延时属性    timeoutflag    char(1)    1延时0不延时
     char        sz_authlevel[2];        //        认证方式/级别    authlevel    char(1)    安全级别
     int            n_pwderrtimes;            //        登陆错误次数    pwderrtimes    int
     char        sz_singleflag[2];        //        客户标志        singleflag    char(1)    0 个人 1 机构
     char        sz_checkpwdflag[2];        //        密码有效标志    checkpwdflag    char(1)    0 正常 1 过期 2 未修改
-    
+
     char        sz_custcert[129];        //        客户证书    custcert    char(128)，登录成功后返回的会话信息，以后做委托或查询时传入作为入参  登陆时送空串,登陆后获得，后续请求传递  登录成功后返回的会话信息，以后做委托或查询时传入作为入参
     char        sz_tokenlen[9];            //        登录时输入的动态令牌长度    tokenlen    char(8)    如为普通方式，则是0
     char        sz_lastlogindate[9];    //        最近登录日期    lastlogindate    char(8)
@@ -309,7 +321,39 @@ struct STradeGateLoginAItem
     char        sz_inputid[65];            //        登陆标识    inputid    char(64)
     char        sz_tokenenddate[9];        //        客户动态令牌结束日期    tokenenddate    char(8)
     char        sz_bindflag[2];            //        硬件绑定信息标识    bindflag    char(1)    'N'未绑定 '1'已绑定已验证通过  '0'验证绑定信息失败
+    cJSON* toJSONObject(JNIEnv* env)
+    {
+        cJSON *json = cJSON_CreateObject();
+        //
+        cJSON_AddStringToObject(json,"sz_custprop",NewCodedString(env,sz_custprop,"GB2312",strlen(sz_custprop)));
+        cJSON_AddStringToObject(json,"sz_market",NewCodedString(env,sz_market,"GB2312",strlen(sz_market)));
+        cJSON_AddStringToObject(json,"sz_secuid",NewCodedString(env,sz_secuid,"GB2312",strlen(sz_secuid)));
+        cJSON_AddStringToObject(json,"sz_name",NewCodedString(env,sz_name,"GB2312",strlen(sz_name)));
+        cJSON_AddNumberToObject(json,"n64_fundid",n64_fundid);
+        cJSON_AddNumberToObject(json,"n64_custid",n64_custid);
+        //
+        cJSON_AddStringToObject(json,"sz_custname",NewCodedString(env,sz_custname,"GB2312",strlen(sz_custname)));
+        cJSON_AddStringToObject(json,"sz_orgid",NewCodedString(env,sz_orgid,"GB2312",strlen(sz_orgid)));
+        cJSON_AddStringToObject(json,"sz_timeoutflag",NewCodedString(env,sz_timeoutflag,"GB2312",strlen(sz_timeoutflag)));
+        cJSON_AddStringToObject(json,"sz_authlevel",NewCodedString(env,sz_authlevel,"GB2312",strlen(sz_authlevel)));
+        cJSON_AddNumberToObject(json,"n_pwderrtimes",n_pwderrtimes);
+
+        cJSON_AddStringToObject(json,"sz_singleflag",NewCodedString(env,sz_singleflag,"GB2312",strlen(sz_singleflag)));
+        cJSON_AddStringToObject(json,"sz_checkpwdflag",NewCodedString(env,sz_checkpwdflag,"GB2312",strlen(sz_checkpwdflag)));
+        cJSON_AddStringToObject(json,"sz_custcert",NewCodedString(env,sz_custcert,"GB2312",strlen(sz_custcert)));
+        cJSON_AddStringToObject(json,"sz_tokenlen",NewCodedString(env,sz_tokenlen,"GB2312",strlen(sz_tokenlen)));
+        cJSON_AddStringToObject(json,"sz_lastlogindate",NewCodedString(env,sz_lastlogindate,"GB2312",strlen(sz_lastlogindate)));
+        cJSON_AddStringToObject(json,"sz_lastlogintime",NewCodedString(env,sz_lastlogintime,"GB2312",strlen(sz_lastlogintime)));
+        cJSON_AddStringToObject(json,"sz_lastloginip",NewCodedString(env,sz_lastloginip,"GB2312",strlen(sz_lastloginip)));
+        cJSON_AddStringToObject(json,"sz_lastloginmac",NewCodedString(env,sz_lastloginmac,"GB2312",strlen(sz_lastloginmac)));
+        cJSON_AddStringToObject(json,"sz_inputtype",NewCodedString(env,sz_inputtype,"GB2312",strlen(sz_inputtype)));
+        cJSON_AddStringToObject(json,"sz_inputid",NewCodedString(env,sz_inputid,"GB2312",strlen(sz_inputid)));
+        cJSON_AddStringToObject(json,"sz_tokenenddate",NewCodedString(env,sz_tokenenddate,"GB2312",strlen(sz_tokenenddate)));
+        cJSON_AddStringToObject(json,"sz_bindflag",NewCodedString(env,sz_bindflag,"GB2312",strlen(sz_bindflag)));
+        return json;
+    }
 };
+
 struct STradeGateLoginA
 {
     BOOLEAN        bLoginSucc;        //登陆是否成功
@@ -324,6 +368,31 @@ struct STradeGateLoginA
             char                    szErrMsg[0];    //end with '\0'
         };
     };
+
+    std::string toJSON(JNIEnv* env,const char* errMsg,STradeGateLoginAItem * lists)
+    {
+        cJSON *json = cJSON_CreateObject();
+        //
+        cJSON_AddNumberToObject(json,"bLoginSucc",(int)bLoginSucc);
+        cJSON_AddNumberToObject(json,"dwCount",dwCount);
+        cJSON_AddNumberToObject(json,"dwLen",dwLen);
+        int base64len = (strlen(errMsg)/3+1)*4+1;
+        //char *basestr = new char[base64len];
+        //base64_encode((const char *)errMsg,(const long)strlen(errMsg),basestr);
+        cJSON_AddStringToObject(json,"szErrMsg",NewCodedString(env,errMsg,"GB2312",strlen(errMsg)));
+        if(lists != NULL && sizeof(lists)>0)
+        {
+            cJSON *jsonarray = cJSON_CreateArray();
+            for(int i=0;i<sizeof(lists);i++)
+            {
+                cJSON_AddItemToArray(jsonarray,lists[i].toJSONObject(env));
+            }
+            cJSON_AddItemToObject(json,"items",jsonarray);
+        }
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 
@@ -426,10 +495,10 @@ struct STradeGateLoginA
 struct STradeGateBizFun
 {
     STradeGateUserInfo        userinfo;                //    用户信息，必送
-    
+
     DWORD                    dwContentLen;            //非空时含'\0'
     DWORD                    reserve[4];
-    
+
     char                    szContent[0];            //见 BizFun字符串例子
 };
 
@@ -437,8 +506,19 @@ struct STradeGateBizFunA
 {
     DWORD                    dwContentLen;
     DWORD                    reserve[4];
-    
+
     char                    szContent[0];            //见 BizFun字符串例子
+    //
+    std::string toJSON(JNIEnv* env,const char* content)
+    {
+        cJSON *json = cJSON_CreateObject();
+        //
+        cJSON_AddNumberToObject(json,"dwContentLen",(int)dwContentLen);
+        cJSON_AddStringToObject(json,"content",NewCodedString(env,content,"GB2312",strlen(content)));
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 
@@ -450,7 +530,7 @@ struct STradeGateBizFunA
 /*BizFun字符串例子
  入参:
  PUBLICID=PUB0001&TBL_IN=filename,md5,position;otcfundlist.ini,,0;
- 
+
  出参,单集合
  PUBLICID=PUB0001
  &TBL_OUT=filename,filecontent,position,totalsize; //totalsize编码前的文件长度
@@ -466,12 +546,12 @@ struct STradeGateBizFunA
 /*struct STradeGateFundsQuery
  {
  STradeGateUserInfo        userinfo;                        //    用户信息，必送
- 
+
  __int64                    n64_fundid;                        //    资金账号    fundid        int    N    不送查询全部
  char                    sz_moneytype[MONEYTYPE_LEN];    //    货币        moneytype    char(1)    N    不送查询全部
  char                    sz_remark[7];                    //    备注        remark        char(6)    N
  };
- 
+
  struct STradeGateFundsQueryAItem
  {
  __int64                    n64_custid;                    //    客户代码    custid            int
@@ -505,8 +585,8 @@ struct STradeGateBizFunA
  __int64                            n64_fundid;                                //资金账号    fundid    int    N    不送查询全部
  char                            sz_moneytype[MONEYTYPE_LEN];            //货币    moneytype    char(1)    N    不送查询全部
  };
- 
- 
+
+
  struct    SExternalFundsQueryAItem
  {
  __int64                            n64_custid;                                //客户代码    custid    int
@@ -517,8 +597,8 @@ struct STradeGateBizFunA
  double                            db_fundavl;                                //资金可用    fundavl    numeric(19,2)
  double                            db_fundbal;                                //资金余额    fundbal    numeric(19,2)
  };
- 
- 
+
+
  struct    SExternalFundsQueryA
  {
  DWORD        dwCount;
@@ -684,7 +764,7 @@ struct STradeGateBizFunA
  char                        sz_stkcode[STKCODE_LEN];        //     证券代码        stkcode            char(8)    Y
  char                        sz_bsflag[3];                    //     买卖类别        bsflag            char(2)    Y
  double                        db_price;                        //     价格            price            numeric(9,3)    Y
- 
+
  int                            n_qty;                            //     数量    qty    int    Y
  int                            n_ordergroup;                    //     委托批号    ordergroup    int    Y    0,
  char                        sz_bankcode[5];                    //     外部银行        bankcode        char(4)    N    三方交易时送
@@ -706,12 +786,12 @@ struct STradeGateBizFunA
  char                        sz_oldorderid[25];                //     原合同序号        oldorderid        char(24)    N    当bsflag为1X,1Y，且是意向转成交时必须填
  char                        sz_prodcode[13];                //     产品编码        prodcode        Char(12)    N    6位的证券代码 + 3位购回天数 + 3位期号（报价回购使用）
  char                        sz_pricetype[2];                //     报价类型        pricetype        Char(1)    N    盘后定价大宗交易报价类型    1：当日收盘价,    2：加权平均价
- 
+
  char                        sz_blackflag[2];                //是否允许购买黑名单证券    blackflag    Char(1)    N    1：允许购买 0：不允许购买，默认为0
  char                        sz_dzsaletype[2];                //    减持类型    dzsaletype    Char(1)    N    大宗交易股份减持类型。0：非特定股份减持1：特定股份减持
- 
+
  __int64                        n64_risksignsno;                //风险揭示签署流水号    risksignsno    int64    N    调用411017获取
- 
+
  };
  struct STradeGateOrderA
  {
@@ -719,7 +799,7 @@ struct STradeGateBizFunA
  char                    sz_orderid[11];                        //     合同序号        orderid            char(10)    返回给股民
  int                        n_ordergroup;                        //     委托批号        ordergroup        int            返回给股民
  };
- 
+
  */
 
 //委托撤单(410413)
@@ -1070,7 +1150,7 @@ struct STradeGateBizFunA
  发起方： '0' 证券发起 '1' 银行发起  '2' 双方发起
  校验密码校验：0 不校验 1 校验
  证件校验标志：0 不校验 1 校验
- 
+
  */
 // struct    SStoreTransferBankInfoQuery
 // {
@@ -1103,7 +1183,7 @@ struct STradeGateBizFunA
  备注信息    sourcetype: '0' 证券发起 '1' 银行发起 '2' 双方发起
  由于发起方向和转帐方式关联，所以目前系统只取了'银行转证券'作为判别发起方向的标识
  获取开通外
- 
+
  */
 // struct    STransferBankAccountQuery
 // {
@@ -2992,7 +3072,7 @@ struct    SSystemStateQueryA
  char                            sz_market;                                  //交易市场    market    char    Y
  char                            sz_stkcode[STKCODE_LEN];                  //证券代码    stkcode    char(6)    Y
  };
- 
+
  struct    SExerciseInfoQueryAItem
  {
  char                            sz_market[MARKET_LEN];                        //交易市场    market    char(1)
@@ -3010,8 +3090,8 @@ struct    SSystemStateQueryA
  int                                n_exerbegindate;                            //行权开始日期    exerbegindate    int
  int                                n_exerenddate;                                //行权结束日期    exerenddate    int
  };
- 
- 
+
+
  struct    SExerciseInfoQueryA
  {
  DWORD        dwCount;
@@ -3030,7 +3110,7 @@ struct    SSystemStateQueryA
 /*BizFun字符串例子
  入参:
  FUN=410501&TBL_IN=fundid,market,secuid,qryflag,count,poststr;111,0,34524,1,100,;
- 
+
  出参,单集合
  FUN=410501
  &TBL_OUT=poststr,custid,market,secuid,name,secuseq,regflag;

@@ -3,13 +3,13 @@ package com.ez08.trade.net;
 public class YCRequest {
 
     ResponseCallback callback;
-    public int pid;
+    public int sn;
     public long mSendTime;    //发数据的时间
     public int mTimeout;	//超时时间
     public byte[] mData;
 
-    public YCRequest(int pid) {
-        this.pid = pid;
+    public YCRequest(int sn) {
+        this.sn = sn;
     }
 
     public YCRequest(ResponseCallback callback) {
@@ -41,11 +41,11 @@ public class YCRequest {
     public void cancel(Client client){
 //        mResult = RESULT_CANCELED;
 //        failed(client);
-        System.out.println("Sn=" + pid + ", status = cancel");
+        System.out.println("Sn=" + sn + ", status = cancel");
     }
 
 
-    public String parse(byte[] buffer){
+    public String parse(byte[] head,byte[] body){
         return "";
     }
 

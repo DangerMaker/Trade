@@ -17,6 +17,7 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              cBase64.cpp
              cJSON.cpp
+             Packet_Tools.cpp
              native-lib.cpp
              TRC4.cpp
              GenerateKey.cpp
@@ -34,7 +35,6 @@ find_library( # Sets the name of the path variable.
 target_include_directories(native-lib PRIVATE
                            ${lib_DIR}/openssl/include
                            )
-
 
 target_link_libraries( # Specifies the target library.
                        native-lib

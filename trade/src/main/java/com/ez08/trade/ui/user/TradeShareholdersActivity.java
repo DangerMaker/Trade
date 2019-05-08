@@ -5,11 +5,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ez08.trade.R;
+import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.Client;
+import com.ez08.trade.net.ClientHelper;
+import com.ez08.trade.net.Response;
+import com.ez08.trade.net.ResponseCallback;
 import com.ez08.trade.ui.BaseActivity;
 import com.ez08.trade.ui.trade.adpater.TradeMainAdapter;
 import com.ez08.trade.ui.trade.entity.TradeOtherEntity;
@@ -53,6 +59,22 @@ public class TradeShareholdersActivity extends BaseActivity implements View.OnCl
 //        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","沪市","153000"));
 //        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","深市","153001"));
         adapter.addAll(mList);
+
+
+//        String body = "FUN=" + "410501" + "&TBL_IN=" + "qryflag,count,poststr;" + "0,10,;";
+        String body = "FUN=410501&TBL_IN=fundid,market,secuid,qryflag,count,poststr;,,,1,10,;";
+
+        BizRequest request = new BizRequest();
+        request.setBody(body);
+        request.setCallback(new ResponseCallback() {
+            @Override
+            public void callback(Client client, Response data) {
+                if(data.isSucceed()){
+                    Log.e("ShareHolders",data.getData());
+                }
+            }
+        });
+        ClientHelper.get().send(request);
     }
 
     @Override

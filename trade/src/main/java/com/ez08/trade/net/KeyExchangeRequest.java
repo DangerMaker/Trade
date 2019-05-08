@@ -1,12 +1,15 @@
 package com.ez08.trade.net;
 
 public class KeyExchangeRequest extends YCRequest {
-    public KeyExchangeRequest(int pid) {
-        super(pid);
+
+    public KeyExchangeRequest() {
+        super(SnFactory.getSnClient());
+        this.mData = NativeTools.genTradePacketKeyExchangePackFromJNI(sn);
     }
 
     @Override
-    public String parse(byte[] buffer) {
-        return NativeTools.parseTradePacketKeyExchangeFromJNI(buffer);
+    public String parse(byte[] head, byte[] body) {
+        return NativeTools.parseTradePacketKeyExchangeFromJNI(body);
     }
+
 }

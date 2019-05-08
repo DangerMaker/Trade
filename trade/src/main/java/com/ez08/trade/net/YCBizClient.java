@@ -1,6 +1,11 @@
 package com.ez08.trade.net;
 
 import android.content.IntentFilter;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -44,7 +49,7 @@ import io.netty.handler.timeout.IdleStateHandler;
  * 8、这里保存握手状态以及加密相关的所有信息，网络请求可以指示是否在握手成功后方可发送，如果是，则握手成功后自动将队列中未发送的请求进行发送
  * 9、支持确保送到发送（可以考虑用加大超时时间来实现，系统对超时时间大于一定时间的请求做持续化处理）
  */
-public class YCBizClient implements Client{
+public class YCBizClient implements Client {
 
     private static final String tag = "YCSocketClient";
     private final static Logger logger = Logger.getLogger(tag);
@@ -58,18 +63,18 @@ public class YCBizClient implements Client{
     public static final int STATE_HANDSHAKEED = 4;//握手成功
     private boolean mDisconnectByClient;
 
-    private int TIME_OUT = 10;
+    private int TIME_OUT = 20;
+    private int TIME_WRITE_OUT = 20;
     private int mState = 0; // 状态
     private String mHost;
     private int mPort;
 
     private int mMisHeartBeatCount;
     private ConnectListener connectListener;
-
+    private ChannelHandlerContext ctx;
     // netty相关对象
     private EventLoopGroup mWorkerGroup;
     private Bootstrap mBootstrap;
-    private static ChannelHandlerContext mCtx;
 
     //请求存储表
     private Hashtable<Integer, YCRequest> mRequestTable;
@@ -90,7 +95,7 @@ public class YCBizClient implements Client{
             protected void initChannel(SocketChannel arg0) throws Exception {
                 ChannelPipeline pipeline = arg0.pipeline();
                 pipeline.addLast("encoder", new NetPackageEncoder());
-//                pipeline.addLast("idleStateHandler", new IdleStateHandler(TIME_OUT, 1, 0, TimeUnit.SECONDS));
+                pipeline.addLast("idleStateHandler", new IdleStateHandler(TIME_OUT, TIME_WRITE_OUT, 0, TimeUnit.SECONDS));
                 pipeline.addLast(new EzMessageDecoder(),
                         new PackageClientHandler());    //	PackageClientHandler处理激活、数据接收、断开连接等事件
             }
@@ -140,10 +145,6 @@ public class YCBizClient implements Client{
             return false;
         try {
             //断开之前的连接
-            ChannelHandlerContext ctx = mCtx;
-            if (ctx != null)
-                ctx.close();
-            mCtx = null;//这样标志成是初次连接而不是重试连接
 
             ChannelFuture cf = mBootstrap.connect(new InetSocketAddress(mHost, mPort));
             cf.addListener(new ChannelFutureListener() {
@@ -172,10 +173,6 @@ public class YCBizClient implements Client{
      */
     public void disconnect() {
         mDisconnectByClient = true;
-        ChannelHandlerContext ctx = mCtx;
-        mCtx = null;
-        if (ctx != null)
-            ctx.close();
         //通知所有尚未完成的请求连接已经中断
         clearRequestTable();
         mState = STATE_NONE;
@@ -199,7 +196,7 @@ public class YCBizClient implements Client{
     public boolean startHandShake(String msg) {
         HandShakeRequest request = new HandShakeRequest(13);
         int sn = SnFactory.getSnClient();//需要获取请求序号
-        request.pid = sn;
+        request.sn = sn;
         if (mState == STATE_CONNECTED) {
             mState = STATE_HANDSHAKEING;
             mRequestTable.put(sn, request);
@@ -235,10 +232,10 @@ public class YCBizClient implements Client{
         if (request == null)
             return -1;
 
-        mRequestTable.put(request.pid, request);
+        mRequestTable.put(request.sn, request);
         send2Net(request);
-        mTimeOutTable.put(request.pid, request.mTimeout);
-        return request.pid;
+        mTimeOutTable.put(request.sn, request.mTimeout);
+        return request.sn;
     }
 
 
@@ -278,7 +275,6 @@ public class YCBizClient implements Client{
         request.mSendTime = System.currentTimeMillis();
         //向网络连接发送，异步发送
 //        NetPackage netPackage = request.getNetPackage();
-        ChannelHandlerContext ctx = mCtx;
         if (ctx != null)
             ctx.writeAndFlush(request.mData);
     }
@@ -373,38 +369,57 @@ public class YCBizClient implements Client{
      * @author lilongtan
      */
     public class EzMessageDecoder extends ByteToMessageDecoder {
+        public final int HEADSIZE = 20;
 
         @Override
         protected void decode(ChannelHandlerContext arg0, ByteBuf buffer,
                               List<Object> out) throws Exception {
 
-            buffer.markReaderIndex();
-
-            if (buffer.readableBytes() < 19) {
+            if (buffer.readableBytes() < HEADSIZE) {
                 return;
             }
+            //
+            buffer.markReaderIndex();
+
             //获取包头对象
-            byte[] headdecoded = new byte[19];
+            byte[] headdecoded = new byte[HEADSIZE];
             buffer.readBytes(headdecoded);
             String jsonhead = NativeTools.parseTradeHeadFromJNI(headdecoded);
             JSONObject jsonObject = new JSONObject(jsonhead);
             int pid = jsonObject.getInt("wPid");
-            int bodyLen = jsonObject.getInt("dwRawSize");
+            int bodyLen = jsonObject.getInt("dwBodyLen");
+            int sn = jsonObject.getInt("dwReqId");
 
             //获取包体对象
             int bodylength = bodyLen;//需要换成json对应的值
             if (buffer.readableBytes() < bodylength) {
+                buffer.resetReaderIndex();
                 return; // (2)
             }
+
+            if(pid == 110){
+                buffer.skipBytes(bodyLen);
+                logger.info("heart receiver 110.......");
+                return;
+            }
+
             byte[] bodydecoded = new byte[bodylength];
             buffer.readBytes(bodydecoded);
-            String jsonbody = mRequestTable.get(pid).parse(bodydecoded);
+
+            String jsonbody;
+            if(pid == 2009) {
+                jsonbody = NativeTools.parseTradeGateErrorFromJNI(headdecoded,bodydecoded);
+            }else{
+                jsonbody = mRequestTable.get(sn).parse(headdecoded, bodydecoded);
+            }
+            logger.info("EzMessageDecoder");
+
             //获取图片内容,在bodydecoded内容里面,bodydecoded+VerifyCodeBodySizeB偏移
             NetPackage netPackage = new NetPackage();
             netPackage.pid = pid;
+            netPackage.sn = sn;
             netPackage.data = jsonbody;
             out.add(netPackage);
-            logger.info("EzMessageDecoder");
             return;
 
 
@@ -424,7 +439,7 @@ public class YCBizClient implements Client{
 ////                message.socketWrite(arg2);
 //                return;
 //            }
-            arg2.writeBytes((byte[])arg1);
+            arg2.writeBytes((byte[]) arg1);
             logger.info("NetPackageEncoder");
         }
     }
@@ -439,14 +454,9 @@ public class YCBizClient implements Client{
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             super.channelActive(ctx);
             logger.info("连接激活 channelId = " + ctx.toString() + "...channelActive");
-
             mState = STATE_CONNECTED;
 
-            //关闭上一次的连接，避免出现多个连接
-            if (mCtx != null) {
-                mCtx.close();
-            }
-            mCtx = ctx;
+            YCBizClient.this.ctx = ctx;
 
             if (connectListener != null)
                 connectListener.connectSuccess(YCBizClient.this);
@@ -458,9 +468,9 @@ public class YCBizClient implements Client{
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             super.channelInactive(ctx);
             logger.info("channelInactive连接关闭成功 channelId = " + ctx.toString());
-            if (mCtx != null) {
-                if (mCtx == ctx) {//mCtx不为空并且和当前值相同，说明曾经连接成功过，这时才算是连接丢失，
-                    mCtx = null;
+            if (YCBizClient.this.ctx  != null) {
+                if (YCBizClient.this.ctx  == ctx) {//mCtx不为空并且和当前值相同，说明曾经连接成功过，这时才算是连接丢失，
+                    YCBizClient.this.ctx  = null;
                     mState = STATE_NONE;
                     connectLost();
                 }
@@ -475,13 +485,15 @@ public class YCBizClient implements Client{
                 throws Exception {
             super.channelRead(ctx, msg);
             logger.info("channelRead");
-            if(msg != null && msg instanceof NetPackage){
-                NetPackage netPackage = (NetPackage) msg;
-                YCRequest request = mRequestTable.get(netPackage.pid);
-                Response response = new Response();
-                response.setData(netPackage.data);
-                request.received(response,client);
-                mRequestTable.remove(netPackage.pid);
+            if (msg != null && msg instanceof NetPackage) {
+                Message message = getMainHandler().obtainMessage(MESSAGE_POST_RESULT, new AsyncTaskResult(YCBizClient.this, (NetPackage) msg));
+                message.sendToTarget();
+//                NetPackage netPackage = (NetPackage) msg;
+//                YCRequest request = mRequestTable.get(netPackage.pid);
+//                Response response = new Response();
+//                response.setData(netPackage.data);
+//                request.received(response,client);
+//                mRequestTable.remove(netPackage.pid);
             }
 
 //            send(new YCRequest());
@@ -531,11 +543,8 @@ public class YCBizClient implements Client{
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             if (evt instanceof IdleStateEvent) {
-//                mErrorMsg = "";
                 IdleStateEvent event = (IdleStateEvent) evt;
-//
                 if (event.state() == IdleState.READER_IDLE) {
-
 
 //                    logger.info("定时心跳间隔触发...userEventTriggered" + ctx.channel());
 //                    mLastHeartBeatTime = System.currentTimeMillis();
@@ -548,8 +557,8 @@ public class YCBizClient implements Client{
 //                    }
 //                    mMisHeartBeatCount++;
 //                    if(mMisHeartBeatCount % 5 == 0){
-                        logger.info("userEventTriggered");
-                        ctx.writeAndFlush(NativeTools.genTradeHeartPackFromJNI());
+                    logger.info("userEventTriggered");
+//                    ctx.writeAndFlush(NativeTools.genTradeHeartPackFromJNI());
 //                    }
 
 //                    if (mMisHeartBeatCount > MAX_MIS_HEARTBEAT_COUNT) {
@@ -565,6 +574,8 @@ public class YCBizClient implements Client{
 //                    }
                 } else if (event.state() == IdleState.WRITER_IDLE) {
 ////                    checkTimeOut();
+                    logger.info("WRITER_IDLE");
+                    ctx.writeAndFlush(NativeTools.genTradeHeartBeatFromJNI());
                 }
 //            } else {
 //                logger.info("EzNetHelper = " + evt.getClass().getCanonicalName() + ",异常，断开连接");
@@ -583,6 +594,51 @@ public class YCBizClient implements Client{
             cause.printStackTrace();
             ctx.close();
             mErrorMsg = cause.getLocalizedMessage();
+        }
+    }
+
+    private static InternalHandler sHandler;
+    private static final int MESSAGE_POST_RESULT = 0x1;
+
+    private static Handler getMainHandler() {
+        synchronized (AsyncTask.class) {
+            if (sHandler == null) {
+                sHandler = new InternalHandler(Looper.getMainLooper());
+            }
+            return sHandler;
+        }
+    }
+
+    private static class InternalHandler extends Handler {
+        public InternalHandler(Looper looper) {
+            super(looper);
+        }
+
+        @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
+        @Override
+        public void handleMessage(Message msg) {
+            AsyncTaskResult result = (AsyncTaskResult) msg.obj;
+            switch (msg.what) {
+                case MESSAGE_POST_RESULT:
+                    // There is only one result
+                    NetPackage netPackage = result.netPackage;
+                    YCRequest request = result.client.mRequestTable.get(netPackage.sn);
+                    Response response = new Response();
+                    response.setData(netPackage.data);
+                    request.received(response, result.client);
+                    result.client.mRequestTable.remove(netPackage.sn);
+                    break;
+            }
+        }
+    }
+
+    private static class AsyncTaskResult {
+        YCBizClient client;
+        NetPackage netPackage;
+
+        AsyncTaskResult(YCBizClient client, NetPackage netPackage) {
+            this.client = client;
+            this.netPackage = netPackage;
         }
     }
 
