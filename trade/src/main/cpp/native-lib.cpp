@@ -516,7 +516,7 @@ jint reqId
     STradeGateBizFun *pBody = (STradeGateBizFun *)new BYTE[bodySize];
     memset(pBody, 0, bodySize);
     pBody->dwContentLen = outlength + 1;
-    memcpy(pBody+sizeof(STradeGateBizFun), contentbuffer, outlength + 1);
+    memcpy(pBody+1, contentbuffer, outlength + 1);
     //
     loadUserInfo(pBody->userinfo);
     //

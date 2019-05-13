@@ -1,6 +1,5 @@
 package com.ez08.trade.ui.user;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -31,7 +30,10 @@ import com.ez08.trade.net.YCSocketClient;
 import com.ez08.trade.tools.ActivityCallback;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.view.BlueUnderLineClickableSpan;
+import com.ez08.trade.user.TradeUser;
+import com.ez08.trade.user.UserHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,7 +81,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         registerBtn.setText(builder);
         registerBtn.setMovementMethod(LinkMovementMethod.getInstance());
 
-//        createVerityClientAndSend(0);
+        createVerityClientAndSend(0);
         createBizClient();
     }
 
@@ -131,6 +133,14 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                         if (succ == 0) {
                             String msg = jsonObject.getString("szErrMsg");
                             Log.e(TAG, msg);
+                        } else {
+                            String array = jsonObject.getString("items");
+                            JSONArray jsonArray = new JSONArray(array);
+                            JSONObject index1 = jsonArray.getJSONObject(0);
+                            UserHelper.init(index1.getString("sz_name"),
+                                    index1.getString("sz_market"),
+                                    index1.getString("n64_fundid"),
+                                    index1.getString("sz_custcert"));
 
                         }
                     } catch (JSONException e) {
@@ -147,11 +157,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         verityClient.setOnConnectListener(new ConnectListener() {
             @Override
             public void connectSuccess(Client client) {
-                if (type == 0) {
-                    sendVerityPicRequest(client);
-                } else {
-                    sendVerityRequest(client);
-                }
+                sendVerityPicRequest(client);
             }
 
             @Override

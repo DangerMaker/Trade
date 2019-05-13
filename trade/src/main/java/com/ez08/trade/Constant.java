@@ -6,4 +6,5 @@ public class Constant {
     public static final int BIZ_SERVER_PORT = 15001;
 
     public static final String SERVER_CHARSET = "GBK";
+    public static final String URI_DEFAULT_HELPER = "http://123.com?";
 }
