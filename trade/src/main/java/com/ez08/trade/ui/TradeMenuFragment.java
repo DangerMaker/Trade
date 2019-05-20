@@ -61,15 +61,16 @@ public class TradeMenuFragment extends BaseFragment {
         mList.add(new TradeOptionEntity("卖","卖出",R.drawable.menu_sell,1));
         mList.add(new TradeOptionEntity("撤","撤单",R.drawable.menu_cancel,2));
         mList.add(new TradeOptionEntity("持","持仓",R.drawable.menu_holder,3));
-        mList.add(new TradeOptionEntity("批","批量委托",R.drawable.menu_batch,-1));
+        mList.add(new TradeOptionEntity("市","市价买卖",R.drawable.meun_market_price,-1));
         mList.add(new TradeOptionEntity("对","对买对卖",R.drawable.menu_buy_sell,-1));
+        mList.add(new TradeOptionEntity("批","批量委托",R.drawable.menu_batch,-1));
         mList.add(new TradeOptionEntity("查","查询",R.drawable.menu_query,-1));
         mList.add(new TradeOtherEntity("新股申购","今日有<font color='#FF0000'>2</font>支新股"));
         mList.add(new TradeOtherEntity("银行转账"));
         mList.add(new TradeOtherEntity("预埋单"));
         mList.add(new TradeOtherEntity("预受要约"));
         mList.add(new TradeOtherEntity("网络投票"));
-        mList.add(new TradeOtherEntity("权证行权"));
+        mList.add(new TradeOtherEntity("转股回售"));
         mList.add(new TradeOtherEntity("股东资料"));
         mList.add(new TradeOtherEntity("客户风险级别查询"));
         mList.add(new TradeOtherEntity("客户风险级别测评"));

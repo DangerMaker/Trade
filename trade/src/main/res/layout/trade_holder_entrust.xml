@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingTop="5dp"
@@ -25,22 +26,28 @@
             android:textColor="@color/trade_pull_text"
             android:textSize="15dp" />
 
-        <TextView
+        <com.ez08.trade.ui.view.SingleLineAutoResizeTextView
             android:id="@+id/txt_code"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
             android:layout_marginBottom="5dp"
+            android:maxLines="1"
             android:textColor="@color/trade_pull_text"
-            android:text="10:10:23"
-            android:textSize="15dp" />
+            app:textColor="@color/trade_red"
+            app:textContent="10:10:23"
+            android:textSize="15dp"
+            app:textSize="14dp"
+            app:autoSizeTextType="uniform"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/stock_price"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -53,16 +60,6 @@
             android:textColor="@color/trade_pull_text"
             android:textSize="15dp" />
 
-        <TextView
-            android:id="@+id/stock_average_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dip"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="right"
-            android:textColor="@color/trade_pull_text"
-            android:text="5.12"
-            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout

@@ -11,7 +11,13 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void test(){
+        String aaa = "15261051.82";
+        String bbb = "14987854.22";
+
+        double r = Double.parseDouble(aaa) - Double.parseDouble(bbb);
+        System.out.println(r);
+
     }
+
 }

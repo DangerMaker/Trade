@@ -7,10 +7,13 @@ import com.ez08.trade.R;
 import com.ez08.trade.ui.BaseViewHolder;
 import com.ez08.trade.ui.trade.entity.TradeFundsEntity;
 
+import java.text.DecimalFormat;
+
 public class TradeFundsHolder extends BaseViewHolder<Object> {
 
     TextView titleView;
     TextView numberView;
+
     public TradeFundsHolder(ViewGroup itemView) {
         super(itemView, R.layout.trade_holder_funds);
         titleView = $(R.id.title);
@@ -19,8 +22,8 @@ public class TradeFundsHolder extends BaseViewHolder<Object> {
 
     @Override
     public void setData(Object data) {
-        TradeFundsEntity entity = (TradeFundsEntity)data;
+        TradeFundsEntity entity = (TradeFundsEntity) data;
         titleView.setText(entity.title);
-        numberView.setText(String.format(getContext().getResources().getString(R.string.price_format),entity.number));
+        numberView.setText(entity.number + "元");
     }
 }

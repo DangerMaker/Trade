@@ -6,12 +6,11 @@
 //  Copyright © 2019年 guangguang. All rights reserved.
 //
 
-#include "cJSON.h"
-
 #ifndef Packet_TradeBase_h
 #define Packet_TradeBase_h
 
 #include "Packet_TradeData.h"
+#include "cJSON.h"
 #pragma pack(push,1)
 #pragma warning( disable : 4200 )
 
@@ -34,21 +33,22 @@ struct STradeBaseHead
     DWORD        dwRawSize;
     bool        bEncrypt;
     DWORD        dwCRC_BeforeEnc;
-    std::string toJSON()
-        {
-            cJSON *json = cJSON_CreateObject();
 
-            cJSON_AddNumberToObject(json,"wPid",wPid);
-            cJSON_AddNumberToObject(json,"dwBodyLen",dwBodyLen);
-            cJSON_AddNumberToObject(json,"dwReqId",dwReqId);
-            cJSON_AddNumberToObject(json,"btCompressFlag",btCompressFlag);
-            cJSON_AddNumberToObject(json,"dwRawSize",dwRawSize);
-            cJSON_AddNumberToObject(json,"bEncrypt",(int)bEncrypt);
-            cJSON_AddNumberToObject(json,"dwCRC_BeforeEnc",dwCRC_BeforeEnc);
-            std::string jsonstr = cJSON_Print(json);
-            cJSON_Delete(json);
-            return jsonstr;
-        }
+    std::string toJSON()
+    {
+        cJSON *json = cJSON_CreateObject();
+
+        cJSON_AddNumberToObject(json,"wPid",wPid);
+        cJSON_AddNumberToObject(json,"dwBodyLen",dwBodyLen);
+        cJSON_AddNumberToObject(json,"dwReqId",dwReqId);
+        cJSON_AddNumberToObject(json,"btCompressFlag",btCompressFlag);
+        cJSON_AddNumberToObject(json,"dwRawSize",dwRawSize);
+        cJSON_AddNumberToObject(json,"bEncrypt",(int)bEncrypt);
+        cJSON_AddNumberToObject(json,"dwCRC_BeforeEnc",dwCRC_BeforeEnc);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 
 //    DWORD dwCheckSum=0;
@@ -106,13 +106,21 @@ struct STradeCommOK
 #define PID_TRADE_HQ_QUERY    (PID_TRADE_HQ_BASE+2)
 struct STradeHQQuery
 {
-    DWORD    idMarket;
-    char    szCode[13];
+    DWORD    idMarket;//'shhq'
+    char    szCode[13];//
 };
 struct STradeHQOrderItem
 {
     float                    fPrice;                    //委托价格，为0表示无效
     float                    fOrder;                    //委托数量，为0表示无效
+    cJSON* toJSONObject()
+        {
+            cJSON *json = cJSON_CreateObject();
+            //
+            cJSON_AddItemToObject(json,"fPrice",cJSON_CreateDouble(fPrice,1));
+            cJSON_AddItemToObject(json,"fOrder",cJSON_CreateDouble(fOrder,1));
+            return json;
+        }
 };
 struct STradeHQItem
 {
@@ -131,10 +139,51 @@ struct STradeHQItem
     float                    fIOPV;                    //基金行情
     STradeHQOrderItem        ask[5];
     STradeHQOrderItem        bid[5];
+    std::string toJSON()
+    {
+        cJSON *json = cJSON_CreateObject();
+        //
+        char market[5];
+        memset(market,0,sizeof(market));
+        memcpy(market,&idMarket,sizeof(idMarket));
+        cJSON_AddStringToObject(json,"idMarket",market);
+        cJSON_AddStringToObject(json,"szCode",szCode);
+        cJSON_AddNumberToObject(json,"dwHQDate",dwHQDate);
+        cJSON_AddNumberToObject(json,"dwHHMMSSNNN",dwHHMMSSNNN);
+        cJSON_AddItemToObject(json,"fLastClose",cJSON_CreateDouble(fLastClose,1));
+        cJSON_AddItemToObject(json,"fOpen",cJSON_CreateDouble(fOpen,1));
+        cJSON_AddItemToObject(json,"fHigh",cJSON_CreateDouble(fHigh,1));
+        cJSON_AddItemToObject(json,"fLow",cJSON_CreateDouble(fLow,1));
+        cJSON_AddItemToObject(json,"fNewest",cJSON_CreateDouble(fNewest,1));
+        cJSON_AddItemToObject(json,"fVolume",cJSON_CreateDouble(fVolume,1));
+        cJSON_AddItemToObject(json,"fAmount",cJSON_CreateDouble(fAmount,1));
+        cJSON_AddItemToObject(json,"fPreCloseIOPV",cJSON_CreateDouble(fPreCloseIOPV,1));
+        cJSON_AddItemToObject(json,"fIOPV",cJSON_CreateDouble(fIOPV,1));
+        //
+        cJSON *askarray = cJSON_CreateArray();
+        for(int i=0;i<5;i++)
+        {
+            cJSON_AddItemToArray(askarray,ask[i].toJSONObject());
+        }
+        cJSON *bidarray = cJSON_CreateArray();
+        for(int i=0;i<5;i++)
+        {
+            cJSON_AddItemToArray(bidarray,bid[i].toJSONObject());
+        }
+        cJSON_AddItemToObject(json,"ask",askarray);
+        cJSON_AddItemToObject(json,"bid",bidarray);
+        std::string jsonstr = cJSON_Print(json);
+        cJSON_Delete(json);
+        return jsonstr;
+    }
 };
 struct STradeHQQueryA
 {
     STradeHQItem            sHQ;
+    std::string toJSON()
+    {
+        return sHQ.toJSON();
+    }
 };
 
 

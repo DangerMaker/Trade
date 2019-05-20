@@ -106,4 +106,14 @@ public class MathUtils {
         float str = (float) (((Math.round(f * 100)) / 100.0));
         return str;
     }
+
+    public static String save100(int value){
+        return value/100 * 100 + "";
+    }
+
+    public static String format2Num(double value) {
+        DecimalFormat df1 = new DecimalFormat("0.00");
+        String result = df1.format(value);
+        return result;
+    }
 }

@@ -1,8 +1,13 @@
 package com.ez08.trade.ui.user;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -10,6 +15,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +35,9 @@ import com.ez08.trade.net.YCBizClient;
 import com.ez08.trade.net.YCRequest;
 import com.ez08.trade.net.YCSocketClient;
 import com.ez08.trade.tools.ActivityCallback;
+import com.ez08.trade.tools.SharedPreferencesHelper;
 import com.ez08.trade.ui.BaseFragment;
+import com.ez08.trade.ui.TradeMenuActivity;
 import com.ez08.trade.ui.view.BlueUnderLineClickableSpan;
 import com.ez08.trade.user.TradeUser;
 import com.ez08.trade.user.UserHelper;
@@ -40,6 +49,8 @@ import org.json.JSONObject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.util.Base64.DEFAULT;
 
@@ -50,6 +61,18 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     Button loginBtn;
     String host = Constant.SERVER_IP;
     ImageView verityImageView;
+    ImageView pickAccount;
+    TextView account;
+    AppCompatCheckBox checkBox;
+
+    EditText usernameEdit;
+    EditText passwordEdit;
+    EditText checkEdit;
+
+    boolean isCanSaved;
+    String accountValue;
+
+    SharedPreferencesHelper sharedPreferencesHelper;
 
     public static TradeLoginFragment newInstance() {
         Bundle args = new Bundle();
@@ -69,6 +92,13 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         loginBtn.setOnClickListener(this);
         registerBtn = rootView.findViewById(R.id.register_btn);
         verityImageView = rootView.findViewById(R.id.safe_code_iv);
+        pickAccount = rootView.findViewById(R.id.account_type_nav);
+        pickAccount.setOnClickListener(this);
+        account = rootView.findViewById(R.id.account_type);
+        checkBox = rootView.findViewById(R.id.login_auto_check);
+        usernameEdit = rootView.findViewById(R.id.username_edit);
+        passwordEdit = rootView.findViewById(R.id.password_edit);
+        checkEdit = rootView.findViewById(R.id.check_code);
 
         SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.trade_register_tips));
         builder.setSpan(new BlueUnderLineClickableSpan() {
@@ -81,8 +111,24 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         registerBtn.setText(builder);
         registerBtn.setMovementMethod(LinkMovementMethod.getInstance());
 
+        sharedPreferencesHelper = new SharedPreferencesHelper(mContext, "login_var");
+        isCanSaved = (boolean) sharedPreferencesHelper.getSharedPreference("isCanSaved", true);
+        accountValue = (String) sharedPreferencesHelper.getSharedPreference("accountValue", "");
+
+        checkBox.setChecked(isCanSaved);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isCanSaved = isChecked;
+                sharedPreferencesHelper.put("isCanSaved", isCanSaved);
+            }
+        });
+
+        if (isCanSaved) {
+            usernameEdit.setText(accountValue);
+        }
+
         createVerityClientAndSend(0);
-        createBizClient();
     }
 
     private void createBizClient() {
@@ -95,12 +141,12 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void connectFail(Client client) {
-
+                dismissBusyDialog();
             }
 
             @Override
             public void connectLost(Client client) {
-
+                dismissBusyDialog();
             }
         });
         bizClient.connect();
@@ -114,6 +160,8 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                 if (data.isSucceed()) {
                     Log.e(TAG, data.getData());
                     setLoginPackage(client);
+                } else {
+                    dismissBusyDialog();
                 }
             }
         });
@@ -134,19 +182,30 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                             String msg = jsonObject.getString("szErrMsg");
                             Log.e(TAG, msg);
                         } else {
+                            List<TradeUser> list = new ArrayList<>();
                             String array = jsonObject.getString("items");
                             JSONArray jsonArray = new JSONArray(array);
-                            JSONObject index1 = jsonArray.getJSONObject(0);
-                            UserHelper.init(index1.getString("sz_name"),
-                                    index1.getString("sz_market"),
-                                    index1.getString("n64_fundid"),
-                                    index1.getString("sz_custcert"));
-
+                            for (int i = 0; i < jsonArray.length() ; i++) {
+                                JSONObject index = jsonArray.getJSONObject(i);
+                                TradeUser user = new TradeUser();
+                                user.market = index.getString("sz_market");
+                                user.name = index.getString("sz_name");
+                                user.fundid = index.getString("n64_fundid");
+                                user.custcert = index.getString("sz_custcert");
+                                user.custid = index.getString("n64_custid");
+                                user.secuid = index.getString("sz_secuid");
+                                list.add(user);
+                            }
+                            UserHelper.setUserList(list);
+//                            ((ActivityCallback) getActivity()).replace();
+                            startActivity(new Intent(mContext,TradeMenuActivity.class));
+                            ((Activity)mContext).finish();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                dismissBusyDialog();
             }
         });
         client.send(request);
@@ -214,27 +273,38 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         socketClient.send(request);
     }
 
-    private void sendVerityRequest(Client socketClient) {
-//        YCRequest request = new YCRequest(NativeTools.VERIFICATION_CODE_PID_CHECK_CODE);
-//        byte[] test = NativeTools.getVerifyCodeCheckFromJNI(szId, code,checkId,reserve);
-//        request.mData = test;
-//        request.setCallback(new ResponseCallback() {
-//            @Override
-//            public void callback(Client client, final Response data) {
-//                if (data.isSucceed()) {
-//                }
-//            }
-//        });
-//
-//        socketClient.send(request);
+    public void showPickDialog() {
+        final String[] items = new String[]{"资金账户", "深A", "沪Ａ", "深Ｂ", "沪Ｂ", "沪港通", "股转Ａ", "股转Ｂ", "开放式基金", "深港通"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setItems(items,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        account.setText(items[which]);
+                    }
+                });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_btn) {
-            ((ActivityCallback) getActivity()).replace();
-//            createVerityClientAndSend(1);
+//            ((ActivityCallback) getActivity()).replace();
+            showBusyDialog();
+            accountValue = usernameEdit.getText().toString();
+            sharedPreferencesHelper.put("accountValue", accountValue);
+            createBizClient();
+        } else if (v.getId() == R.id.account_type_nav) {
+            showPickDialog();
         }
     }
 

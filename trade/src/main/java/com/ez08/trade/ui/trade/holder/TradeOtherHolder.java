@@ -1,5 +1,6 @@
 package com.ez08.trade.ui.trade.holder;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
@@ -49,6 +50,10 @@ public class TradeOtherHolder extends BaseViewHolder<Object> {
                     intent.putExtra("url","http://www.baidu.com");
                     JumpActivity.start(getContext(),intent,"网络投票");
                     return;
+                }
+
+                if(entity.title.equals("退出登录")){
+                    ((Activity)getContext()).finish();
                 }
 
                 JumpActivity.start(getContext(),entity.title);

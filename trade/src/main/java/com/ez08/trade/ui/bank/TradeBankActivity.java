@@ -68,17 +68,20 @@ public class TradeBankActivity extends BaseActivity implements View.OnClickListe
                 switch (position){
                     case 0:
                         Intent intent1 = new Intent();
+                        intent1.putExtra("type",1);
                         intent1.setClass(TradeBankActivity.this,TradeBank2SecurityActivity.class);
                         startActivity(intent1);
                         break;
                     case 1:
                         Intent intent2 = new Intent();
-                        intent2.setClass(TradeBankActivity.this,TradeSecurity2BankActivity.class);
+                        intent2.putExtra("type",2);
+                        intent2.setClass(TradeBankActivity.this,TradeBank2SecurityActivity.class);
                         startActivity(intent2);
                         break;
                     case 2:
                         Intent intent4 = new Intent();
-                        intent4.setClass(TradeBankActivity.this,TradeFundLeftActivity.class);
+                        intent4.setClass(TradeBankActivity.this,TradeBank2SecurityActivity.class);
+                        intent4.putExtra("type",3);
                         startActivity(intent4);
                         break;
                     case 3:

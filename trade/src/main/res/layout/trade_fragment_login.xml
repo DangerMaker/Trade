@@ -166,6 +166,7 @@
                     android:textSize="17dp" />
 
                 <com.ez08.trade.ui.view.MyDelEditetext
+                    android:id="@+id/check_code"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"

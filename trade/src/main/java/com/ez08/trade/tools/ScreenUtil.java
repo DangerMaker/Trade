@@ -2,6 +2,7 @@ package com.ez08.trade.tools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -68,5 +69,9 @@ public class ScreenUtil {
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);
         return point.y;
+    }
+
+    public static ColorStateList setTextColor(Context mContext,int color) {
+        return mContext.getResources().getColorStateList(color);
     }
 }

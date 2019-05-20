@@ -49,8 +49,8 @@ public class TradeCancelFragment extends BaseFragment implements Interval {
 
         mList = new ArrayList<>();
         mList.add(new TradeTitleEntrustEntity());
-        mList.add(new TradeEntrustEntity());
-        mList.add(new TradeEntrustEntity());
+//        mList.add(new TradeEntrustEntity());
+//        mList.add(new TradeEntrustEntity());
         adapter.addAll(mList);
     }
 

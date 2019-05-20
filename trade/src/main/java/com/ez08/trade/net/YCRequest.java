@@ -5,7 +5,7 @@ public class YCRequest {
     ResponseCallback callback;
     public int sn;
     public long mSendTime;    //发数据的时间
-    public int mTimeout;	//超时时间
+    public int mTimeout;    //超时时间
     public byte[] mData;
 
     public YCRequest(int sn) {
@@ -30,22 +30,26 @@ public class YCRequest {
         callback.callback(client, response);
     }
 
-    public void received(Response response,Client client){
-        if(callback == null)
+    public void received(Response response, Client client) {
+        if (callback == null)
             return;
 
-        response.setSucceed(true);
+        if (response.getPid() == 2009) {
+            response.setSucceed(false);
+        }else {
+            response.setSucceed(true);
+        }
         callback.callback(client, response);
     }
 
-    public void cancel(Client client){
+    public void cancel(Client client) {
 //        mResult = RESULT_CANCELED;
 //        failed(client);
         System.out.println("Sn=" + sn + ", status = cancel");
     }
 
 
-    public String parse(byte[] head,byte[] body){
+    public String parse(byte[] head, byte[] body) {
         return "";
     }
 

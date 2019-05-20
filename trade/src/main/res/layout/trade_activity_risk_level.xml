@@ -20,10 +20,10 @@
             android:text="@string/trade_risk_type" />
 
         <TextView
+            android:id="@+id/type"
             style="@style/trade_edit_content_custom"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/title"
-            android:text="C4"
             android:textColor="@color/trade_red" />
 
     </LinearLayout>
@@ -43,14 +43,14 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_risk_type" />
+            android:text="@string/trade_risk_score" />
 
         <TextView
+            android:id="@+id/score"
             style="@style/trade_edit_content_custom"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/title"
             android:hint="@string/trade_change_edit_hit"
-            android:text="90分"
             android:textColor="@color/trade_red" />
 
     </LinearLayout>

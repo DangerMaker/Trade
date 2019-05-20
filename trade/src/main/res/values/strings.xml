@@ -48,7 +48,7 @@
     <string name="trade_prime_last">成本/现价</string>
 
     <string name="trade_entrust_time">委托时间</string>
-    <string name="trade_entrust_average">委托/均价</string>
+    <string name="trade_entrust_average">委托</string>
     <string name="trade_entrust_deal">委托/成交</string>
     <string name="trade_entrust_cancel">状态</string>
     <string name="trade_query">查询</string>

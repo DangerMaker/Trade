@@ -35,7 +35,7 @@ public class TradeNewStockActivity extends BaseActivity implements View.OnClickL
         backBtn = findViewById(R.id.img_back);
         backBtn.setOnClickListener(this);
         titleView = findViewById(R.id.title);
-        titleView.setText("新股申购查询");
+        titleView.setText("新股申购");
 
         recyclerView = findViewById(R.id.recycler_view);
         manager = new GridLayoutManager(this, 4);
@@ -59,14 +59,8 @@ public class TradeNewStockActivity extends BaseActivity implements View.OnClickL
         recyclerView.addItemDecoration(divider);
 
         mList = new ArrayList<>();
-//        mList.add(new TradeDrawLeftEntity("新股申购",R.drawable.fresh_stock,"今日有<font color='#FF0000'>2</font>支新股"));
-//        mList.add(new TradeDrawLeftEntity("批量新股申购",R.drawable.batch_fresh_stock));
-//        mList.add(new TradeLineEntity());
         mList.add(new TradeOtherEntity("配号查询"));
-//        mList.add(new TradeOtherEntity("配号查询"));
         mList.add(new TradeOtherEntity("中签查询"));
-//        mList.add(new TradeOtherEntity("历史中签查询"));
-//        mList.add(new TradeOtherEntity("新股申购额度查询"));
         mList.add(new TradeOtherEntity("新股申购代缴款查询"));
         adapter.addAll(mList);
     }

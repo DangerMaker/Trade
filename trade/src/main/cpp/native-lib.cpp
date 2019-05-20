@@ -627,3 +627,90 @@ jbyteArray bodybuffer
     return env->NewStringUTF(jsonstr.c_str());
    //
 }
+
+/*------------行情查询---------------*/
+
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_com_ez08_trade_net_NativeTools_genTradeHQQueryFromJNI(JNIEnv* env,
+jobject /* this */,
+jstring market,
+jstring secucode,
+jint reqId
+)
+{
+    jboolean b=true;
+    const char *strMarket = env->GetStringUTFChars(market,&b);
+    const char *strSecucode = env->GetStringUTFChars(secucode, &b);
+    //
+    DWORD headSize = sizeof(STradeBaseHead);
+    DWORD bodySize = sizeof(STradeHQQuery);
+    //
+    STradeBaseHead *pHead = (STradeBaseHead *)new BYTE[headSize];
+    memset(pHead, 0, headSize);
+    pHead->wPid = PID_TRADE_HQ_QUERY;
+    pHead->dwBodyLen = pHead->dwRawSize = bodySize;
+    pHead->dwReqId = reqId;//
+
+    STradeHQQuery *pBody = (STradeHQQuery *)new BYTE[bodySize];
+    memset(pBody, 0, bodySize);
+    memcpy(&pBody->idMarket,(BYTE*)strMarket,strlen(strMarket));
+    strncpy(pBody->szCode, strSecucode, min(strlen(strSecucode),sizeof(pBody->szCode)));
+    //
+    bool bencresult = encrypt(pHead,(BYTE*)(pBody));
+    if(bencresult == false)
+    {
+        return NULL;
+    }
+    //
+    int lenall = headSize + bodySize;
+    BYTE * buffall = new BYTE[lenall];
+    memcpy(buffall,pHead,headSize);
+    memcpy(buffall+headSize,pBody,bodySize);
+    //
+    jbyteArray jbarray = as_byte_array(env,buffall,lenall);
+    delete [] buffall; buffall = NULL;
+    delete [] pHead; pHead = NULL;
+    delete [] pBody; pBody = NULL;
+    return jbarray;
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_ez08_trade_net_NativeTools_parseTradeHQQueryFromJNI(JNIEnv* env,
+jobject /* this */,
+jbyteArray headbuffer,
+jbyteArray bodybuffer
+)
+{
+   int headlength;
+   unsigned char*  byteheadbuffer = as_unsigned_char_array(env,headbuffer,headlength);
+   STradeBaseHead *pHead = (STradeBaseHead *)byteheadbuffer;
+   int outlength;
+   unsigned char*  bytebuffer = as_unsigned_char_array(env,bodybuffer,outlength);
+   STradeHQQueryA *pBody = (STradeHQQueryA *)bytebuffer;
+   //
+   decrypt(pHead,bytebuffer);
+   //
+   BYTE *pNewBody = uncompress(pHead,bytebuffer,outlength);
+   //
+   bool bNeedDelete = false;
+   if(pNewBody != NULL)
+   {
+       bNeedDelete = true;
+   }
+   else
+   {
+       pNewBody = bytebuffer;
+   }
+   //
+   pBody = (STradeHQQueryA *)pNewBody;
+   //
+   std::string jsonstr = pBody->toJSON();
+   //
+   if(bNeedDelete)
+   {
+       delete[] pNewBody;
+       pNewBody = NULL;
+    }
+    return env->NewStringUTF(jsonstr.c_str());
+   //
+}

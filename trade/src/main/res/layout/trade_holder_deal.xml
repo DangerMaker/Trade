@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_name"
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -26,7 +26,7 @@
             android:textSize="15dp" />
 
         <TextView
-            android:id="@+id/txt_code"
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
@@ -44,22 +44,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/stock_entrust_price"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:layout_gravity="right"
+            android:layout_gravity="center_horizontal"
             android:text="5.25"
             android:textColor="@color/trade_pull_text"
             android:textSize="15dp" />
 
         <TextView
-            android:id="@+id/stock_average_price"
+            android:id="@+id/code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
             android:layout_marginBottom="5dp"
-            android:layout_gravity="right"
+            android:layout_gravity="center_horizontal"
             android:textColor="@color/trade_pull_text"
             android:text="5.12"
             android:textSize="15dp" />
@@ -69,28 +69,19 @@
         android:id="@+id/stock_layout3"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/stock_entrust_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_gravity="right"
-            android:text="500"
-            android:textColor="@color/trade_pull_text"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/stock_deal_num"
+            android:id="@+id/stock_deal_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
             android:layout_marginBottom="5dp"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:textColor="@color/trade_pull_text"
-            android:text="300"
+            android:text="20.15"
             android:textSize="15dp" />
     </LinearLayout>
 
@@ -98,28 +89,19 @@
         android:id="@+id/stock_layout4"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/stock_entrust_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_gravity="right"
-            android:text="买入"
-            android:textColor="@color/trade_pull_text"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/stock_entrust_state"
+            android:id="@+id/stock_deal_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
             android:layout_marginBottom="5dp"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:textColor="@color/trade_pull_text"
-            android:text="已成交"
+            android:text="300"
             android:textSize="15dp" />
     </LinearLayout>
 </LinearLayout>

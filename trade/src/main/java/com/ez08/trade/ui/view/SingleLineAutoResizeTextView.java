@@ -110,4 +110,5 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
         float textBaseline = (getHeight() - (paint.descent() + paint.ascent())) / 2.0f;
         canvas.drawText(textContent, (getWidth() -  textWidth) / 2.0f, textBaseline, paint);
     }
+
 }

@@ -2,7 +2,120 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="现价"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/trade_black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/newest_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22.22"
+                android:textColor="@color/trade_input_text"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昨收"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/trade_black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/last_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22.22"
+                android:textColor="@color/trade_input_text"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:text="涨停"
+                android:textColor="@color/trade_black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/limit_up_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22.22"
+                android:textColor="@color/trade_input_text"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="跌停"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/trade_black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/limit_down_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22.22"
+                android:textColor="@color/trade_input_text"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
     <com.ez08.trade.ui.view.FiveAndTenView
+        android:layout_below="@id/top"
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
@@ -14,6 +127,7 @@
 
 
     <com.ez08.trade.ui.view.TradeView
+        android:layout_below="@id/top"
         android:id="@+id/trade_view"
         android:layout_width="match_parent"
         android:layout_height="270dp"

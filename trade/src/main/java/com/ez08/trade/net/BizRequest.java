@@ -1,5 +1,7 @@
 package com.ez08.trade.net;
 
+import android.util.Log;
+
 import com.ez08.trade.Constant;
 
 import java.io.UnsupportedEncodingException;
@@ -15,6 +17,7 @@ public class BizRequest extends YCRequest {
     }
 
     public void setBody(String body) {
+        Log.e("BizRequest",body);
         try {
             byte[] a = body.getBytes(Constant.SERVER_CHARSET);
             this.mData = NativeTools.genTradeGateBizFunFromJNI(a, sn);

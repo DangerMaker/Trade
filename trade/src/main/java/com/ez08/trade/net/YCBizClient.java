@@ -625,6 +625,7 @@ public class YCBizClient implements Client {
                     YCRequest request = result.client.mRequestTable.get(netPackage.sn);
                     Response response = new Response();
                     response.setData(netPackage.data);
+                    response.setPid(netPackage.pid);
                     request.received(response, result.client);
                     result.client.mRequestTable.remove(netPackage.sn);
                     break;

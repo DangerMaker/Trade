@@ -36,4 +36,7 @@ public class NativeTools {
 
     public static native byte[] genTradeGateBizFunFromJNI(byte[] content,int reqId);
     public static native String parseTradeGateBizFunFromJNI(byte[] head,byte[] body);
+
+    public static native byte[] genTradeHQQueryFromJNI(String market,String secucode,int reqId);
+    public static native String parseTradeHQQueryFromJNI(byte[] head,byte[] body);
 }

@@ -1,6 +1,7 @@
 package com.ez08.trade.net;
 
 public class Response {
+    private int pid;
     private boolean isSucceed = false;
     private String data;
 
@@ -18,5 +19,13 @@ public class Response {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 }

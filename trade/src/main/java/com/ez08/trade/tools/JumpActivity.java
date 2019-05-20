@@ -7,8 +7,11 @@ import android.util.Log;
 
 import com.ez08.trade.ui.TradeWebActivity;
 import com.ez08.trade.ui.bank.TradeBankActivity;
+import com.ez08.trade.ui.fresh_stock.TradeDaijiaoActivity;
 import com.ez08.trade.ui.fresh_stock.TradeFastStockActivity;
 import com.ez08.trade.ui.fresh_stock.TradeNewStockActivity;
+import com.ez08.trade.ui.fresh_stock.TradePeihaoActivity;
+import com.ez08.trade.ui.fresh_stock.TradeZhongqianActivity;
 import com.ez08.trade.ui.invite.TradeInvitedBuyActivity;
 import com.ez08.trade.ui.other.TradeOtherServiceActivity;
 import com.ez08.trade.ui.query.TradeQueryActivity;
@@ -34,6 +37,9 @@ public class JumpActivity {
         classMap.put("查询", TradeQueryActivity.class);
         classMap.put("新股申购", TradeFastStockActivity.class);
         classMap.put("新股申购查询", TradeNewStockActivity.class);
+        classMap.put("配号查询", TradePeihaoActivity.class);
+        classMap.put("中签查询", TradeZhongqianActivity.class);
+        classMap.put("新股申购代缴款查询", TradeDaijiaoActivity.class);
         classMap.put("银行转账", TradeBankActivity.class);
 //        classMap.put("预埋单", TradeBankActivity.class);
         classMap.put("预受要约", TradeInvitedBuyActivity.class);

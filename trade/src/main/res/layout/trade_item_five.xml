@@ -19,7 +19,7 @@
         android:textColor="@color/trade_item_text"
         android:textSize="13dp" />
 
-    <com.ez08.trade.ui.view.SingleLineAutoResizeTextView
+    <TextView
         android:id="@+id/price"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -27,19 +27,15 @@
         android:layout_marginRight="5dp"
         android:gravity="right"
         android:maxLines="1"
-        app:textColor="@color/trade_red"
-        app:textContent="股票名称"
-        app:textSize="13dp" />
+       />
 
-    <com.ez08.trade.ui.view.SingleLineAutoResizeTextView
+    <TextView
         android:id="@+id/volume"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="right"
         android:maxLines="1"
-        app:textColor="@color/trade_red"
-        app:textContent="股票名称"
-        app:textSize="13dp" />
+       />
 
 </LinearLayout>

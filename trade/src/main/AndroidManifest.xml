@@ -30,6 +30,10 @@
         <activity android:name=".ui.bank.TradeFundLeftActivity" />
         <activity android:name=".ui.bank.TradeMyFundsActivity" />
         <activity android:name=".ui.bank.TradeSecurity2BankActivity" />
+        <activity android:name=".ui.TradeMenuActivity" />
+        <activity android:name=".ui.fresh_stock.TradeDaijiaoActivity" />
+        <activity android:name=".ui.fresh_stock.TradePeihaoActivity" />
+        <activity android:name=".ui.fresh_stock.TradeZhongqianActivity" />
 
     </application>
     

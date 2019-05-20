@@ -13,9 +13,7 @@ import com.ez08.trade.ui.user.TradeLoginFragment;
 
 public class MainActivity extends AppCompatActivity implements ActivityCallback {
 
-    static {
-        System.loadLibrary("native-lib");
-    }
+
     FragmentManager fragmentManager;
     RelativeLayout container;
     TextView pageName;
