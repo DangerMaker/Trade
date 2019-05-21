@@ -55,6 +55,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     TextView downPrice;
 
     int type;
+    String bsflag = "B";
 
     @Override
     protected int getLayoutResource() {
@@ -83,6 +84,8 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         lastPrice = rootView.findViewById(R.id.last_price);
         upPrice = rootView.findViewById(R.id.limit_up_price);
         downPrice = rootView.findViewById(R.id.limit_down_price);
+
+        bsflag = type == 0 ? "B" : "S";
     }
 
     TradeStockEntity stockEntity;
@@ -156,7 +159,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                 user.secuid + "," +
                 user.fundid + "," +
                 code + "," +
-                "B" + "," +
+                bsflag + "," +
                 price + "," + "," + "," + "," + "," + "," + "," + "," + "," +
                 ";";
 
@@ -238,13 +241,13 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                 user.secuid + "," +
                 user.fundid + "," +
                 code + "," +
-                "B" + "," +
+                bsflag + "," +
                 price + "," +
                 qty + "," +
                 "0" +
 //                "," + "," + "," + "," + ","
                 "," + "," + "," + "," + "," +
-                "," +  "," + "," + "," + "," + "," + "," + "," + "," + "," + "," +
+                "," + "," + "," + "," + "," + "," + "," + "," + "," + "," + "," +
                 ";";
 
         BizRequest request = new BizRequest();
@@ -266,7 +269,11 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                                 String out = uri.getQueryParameter(key);
                                 String[] split = out.split(";");
                                 String[] var = split[1].split(",");
-
+                                DialogUtils.showSimpleDialog(mContext, "委托成功" + "\n" +
+                                        "委托序号：" + var[0] + "\n" +
+                                        "合同序号：" + var[1] + "\n" +
+                                        "委托批号：" + var[2]
+                                );
                             }
                         }
 

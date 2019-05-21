@@ -1,9 +1,12 @@
 package com.ez08.trade.ui.trade.holder;
 
+import android.content.res.ColorStateList;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ez08.trade.R;
+import com.ez08.trade.tools.CommonUtils;
+import com.ez08.trade.tools.ScreenUtil;
 import com.ez08.trade.ui.BaseViewHolder;
 import com.ez08.trade.ui.trade.entity.TradeEntrustEntity;
 import com.ez08.trade.ui.view.SingleLineAutoResizeTextView;
@@ -17,6 +20,8 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
     TextView num2;
     TextView direction;
     TextView state;
+
+    ColorStateList color;
 
     public TradeEntrustHolder(ViewGroup itemView) {
         super(itemView, R.layout.trade_holder_entrust);
@@ -32,19 +37,34 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
     @Override
     public void setData(TradeEntrustEntity data) {
         name.setText(data.stkname);
-        if(data.opertime.length() == 6 || data.opertime.length() == 8) {
-            String hour = data.opertime.substring(0,2);
-            String min = data.opertime.substring(2,4);
-            String sec = data.opertime.substring(4,6);
-            time.setTextContent(data.orderdate + " " +hour + ":" + min + ":" + sec);
+        if (data.opertime.length() == 6 || data.opertime.length() == 8) {
+            String hour = data.opertime.substring(0, 2);
+            String min = data.opertime.substring(2, 4);
+            String sec = data.opertime.substring(4, 6);
+            String temp = data.orderdate + " ";
+            if (temp.equals(CommonUtils.getCurrentDate())) {
+                temp = "";
+            }
+            time.setTextContent(temp + hour + ":" + min + ":" + sec);
+        } else if (data.opertime.length() == 7) {
+            String hour = data.opertime.substring(0, 1);
+            String min = data.opertime.substring(1, 3);
+            String sec = data.opertime.substring(3, 5);
+            String temp = data.orderdate + " ";
+            if (temp.equals(CommonUtils.getCurrentDate())) {
+                temp = "";
+            }
+            time.setTextContent(temp + "0" + hour + ":" + min + ":" + sec);
         }
         price.setText(data.orderprice);
         num1.setText(data.orderqty);
         num2.setText(data.matchqty);
-        if (Boolean.parseBoolean(data.bsflag)) {
+        if (data.bsflag.equals("S")) {
             direction.setText("卖出");
+            color = ScreenUtil.setTextColor(getContext(), R.color.trade_blue);
         } else {
             direction.setText("买入");
+            color = ScreenUtil.setTextColor(getContext(), R.color.trade_red);
         }
 
         String status;
@@ -76,5 +96,15 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
             status = "未知";
         }
         state.setText(status);
+        setTextColor();
+    }
+
+    private void setTextColor(){
+        name.setTextColor(color);
+        price.setTextColor(color);
+        num1.setTextColor(color);
+        num2.setTextColor(color);
+        direction.setTextColor(color);
+        state.setTextColor(color);
     }
 }

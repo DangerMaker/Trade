@@ -48,8 +48,8 @@
     <string name="trade_prime_last">成本/现价</string>
 
     <string name="trade_entrust_time">委托时间</string>
-    <string name="trade_entrust_average">委托</string>
-    <string name="trade_entrust_deal">委托/成交</string>
+    <string name="trade_entrust_average">委托价</string>
+    <string name="trade_entrust_deal">委托量/成交量</string>
     <string name="trade_entrust_cancel">状态</string>
     <string name="trade_query">查询</string>
     <string name="trade_select_all">全选</string>
@@ -94,7 +94,7 @@
     <string name="trade_securities_name">证券名称</string>
     <string name="trade_available_stock_num">可用股数</string>
     <string name="trade_declare_id_code">收购人代码</string>
-    <string name="trade_declare_num">预售数量</string>
+    <string name="trade_declare_num">预受数量</string>
 
 
 

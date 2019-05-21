@@ -34,6 +34,9 @@
         <activity android:name=".ui.fresh_stock.TradeDaijiaoActivity" />
         <activity android:name=".ui.fresh_stock.TradePeihaoActivity" />
         <activity android:name=".ui.fresh_stock.TradeZhongqianActivity" />
+        <activity android:name=".ui.trade.TradeMarketPriceActivity" />
+        <activity android:name=".ui.trade.TradeBatActivity" />
+        <activity android:name=".ui.invite.TradeInvitedBuyActivity1" />
 
     </application>
     

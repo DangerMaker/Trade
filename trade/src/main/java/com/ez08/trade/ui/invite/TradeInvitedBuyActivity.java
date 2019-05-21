@@ -45,8 +45,8 @@ public class TradeInvitedBuyActivity extends BaseActivity implements View.OnClic
             if (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 1) != null)
                 fragment2 = (TradeDeclareFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 1);
         } else {
-            fragment1 = TradeDeclareFragment.newInstance();
-            fragment2 = TradeDeclareFragment.newInstance();
+            fragment1 = TradeDeclareFragment.newInstance(0);
+            fragment2 = TradeDeclareFragment.newInstance(1);
         }
 
         mFragmentList.clear();

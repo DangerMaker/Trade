@@ -269,7 +269,11 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
     }
 
     public void setMax(String max){
-        maxText.setText("最大可买 " + max + " 股");
+        if(type == 0) {
+            maxText.setText("最大可买 " + max + " 股");
+        }else{
+            maxText.setText("最大可卖 " + max + " 股");
+        }
 //        editText2.setText(max);
         maxValue = Integer.parseInt(max);
     }

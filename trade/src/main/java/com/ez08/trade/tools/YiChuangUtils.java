@@ -68,4 +68,13 @@ public class YiChuangUtils {
         }
     }
 
+    public static String getBSStringByTag(String tag){
+        if(tag.equals("B")){
+            return "买入";
+        }else{
+            return "卖出";
+        }
+
+    }
+
 }

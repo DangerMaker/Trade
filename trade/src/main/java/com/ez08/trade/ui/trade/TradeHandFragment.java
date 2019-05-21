@@ -132,10 +132,53 @@ public class TradeHandFragment extends BaseFragment implements Interval {
         getStockList();
     }
 
-    public void getStockList(){
-//        custid,market,stkcode,stkname,moneytype,stkbal,stkavl,buycost,costprice,mtkcalflag,stkqty,mktval,income,lastprice,stktype,proincome,profitcost,profitprice,stkdecimal;
-//        109000512,0,000006,深振业Ａ,0,976,276,5697.72,5.905,1,976,7817.76,2054.49,8.010,0,2054.49,5763.27,5.905,0.00
-        String body = "FUN=410504&TBL_IN=market,secuid,stkcode,fundid;,,,;";
+    public void getStockList() {
+//        String body = "FUN=410504&TBL_IN=market,secuid,stkcode,fundid;,,,;";
+//        BizRequest request = new BizRequest();
+//        request.setBody(body);
+//        request.setCallback(new ResponseCallback() {
+//            @Override
+//            public void callback(Client client, Response data) {
+//                if (data.isSucceed()) {
+//                    Log.e("TradeHandFragment", data.getData());
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(data.getData());
+//                        String content = jsonObject.getString("content");
+//                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
+//                        Set<String> pn = uri.getQueryParameterNames();
+//                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
+//                            String key = it.next().toString();
+//                            if ("TBL_OUT".equals(key)) {
+//                                String out = uri.getQueryParameter(key);
+//                                String[] split = out.split(";");
+//                                for (int i = 1; i < split.length; i++) {
+//                                    String[] var = split[i].split(",");
+//                                    TradeHandEntity entity = new TradeHandEntity();
+//                                    entity.stkcode = var[2];
+//                                    entity.stkname = var[3];
+//                                    entity.stkbal = var[5];
+//                                    entity.stkavl = var[6];
+//                                    entity.costprice = var[8];
+//                                    entity.mktval = var[11];
+//                                    entity.income = var[12];
+//                                    entity.lastprice = var[13];
+//                                    mList.add(entity);
+//                                    adapter.clearAndAddAll(mList);
+//                                }
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//        ClientHelper.get().send(request);
+
+        String body = "FUN=410503&TBL_IN=market,fundid,secuid,stkcode,qryflag,count,poststr;" +
+                "," +
+                UserHelper.getUser().fundid + "," +
+                ",,1,100,;";
         BizRequest request = new BizRequest();
         request.setBody(body);
         request.setCallback(new ResponseCallback() {
@@ -143,35 +186,35 @@ public class TradeHandFragment extends BaseFragment implements Interval {
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
                     Log.e("TradeHandFragment", data.getData());
-                    try {
-                        JSONObject jsonObject = new JSONObject(data.getData());
-                        String content = jsonObject.getString("content");
-                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
-                        Set<String> pn = uri.getQueryParameterNames();
-                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
-                            String key = it.next().toString();
-                            if ("TBL_OUT".equals(key)) {
-                                String out = uri.getQueryParameter(key);
-                                String[] split = out.split(";");
-                                for (int i = 1; i < split.length; i++) {
-                                    String[] var = split[i].split(",");
-                                    TradeHandEntity entity = new TradeHandEntity();
-                                    entity.stkcode = var[2];
-                                    entity.stkname = var[3];
-                                    entity.stkbal = var[5];
-                                    entity.stkavl = var[6];
-                                    entity.costprice = var[8];
-                                    entity.mktval = var[11];
-                                    entity.income = var[12];
-                                    entity.lastprice = var[13];
-                                    mList.add(entity);
-                                    adapter.clearAndAddAll(mList);
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(data.getData());
+//                        String content = jsonObject.getString("content");
+//                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
+//                        Set<String> pn = uri.getQueryParameterNames();
+//                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
+//                            String key = it.next().toString();
+//                            if ("TBL_OUT".equals(key)) {
+//                                String out = uri.getQueryParameter(key);
+//                                String[] split = out.split(";");
+//                                for (int i = 1; i < split.length; i++) {
+//                                    String[] var = split[i].split(",");
+//                                    TradeHandEntity entity = new TradeHandEntity();
+//                                    entity.stkcode = var[2];
+//                                    entity.stkname = var[3];
+//                                    entity.stkbal = var[5];
+//                                    entity.stkavl = var[6];
+//                                    entity.costprice = var[8];
+//                                    entity.mktval = var[11];
+//                                    entity.income = var[12];
+//                                    entity.lastprice = var[13];
+//                                    mList.add(entity);
+//                                    adapter.clearAndAddAll(mList);
+//                                }
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                 }
             }
         });

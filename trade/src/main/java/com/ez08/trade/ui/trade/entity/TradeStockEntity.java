@@ -9,6 +9,7 @@ public class TradeStockEntity {
     public String stopflag;
     public String maxqty;
     public String minqty;
+    public String fixprice;
 
     public double fLastClose;
     public double fHigh;

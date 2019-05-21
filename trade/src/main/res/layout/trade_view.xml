@@ -50,7 +50,7 @@
             android:background="@drawable/trade_input_white_bg"
             android:gravity="center"
             android:hint="@string/trade_entrust_price"
-            android:inputType="number"
+            android:inputType="number|numberDecimal"
             android:maxLines="1"
             android:padding="5dp"
             android:textColorHint="@color/trade_input_text"

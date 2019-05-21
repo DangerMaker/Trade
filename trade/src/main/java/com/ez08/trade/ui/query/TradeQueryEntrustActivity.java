@@ -277,8 +277,8 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
     public void getWTInfo() {
         String body = "FUN=410510&TBL_IN=market,fundid,secuid,stkcode,ordersno,Ordergroup,bankcode,qryflag,count,poststr,extsno,qryoperway;" +
                 "" + "," +
-                UserHelper.getUser().fundid + "," +
-                UserHelper.getUser().secuid + "," +
+                "" + "," +
+                "" + "," +
                 "" + "," +
                 "" + "," +
                 "" + "," +

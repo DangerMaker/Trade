@@ -15,13 +15,13 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         TAG = this.getClass().getSimpleName();
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        context = this;
     }
 
     protected void dismissBusyDialog() {
