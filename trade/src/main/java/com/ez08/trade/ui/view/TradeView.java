@@ -61,8 +61,6 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
 
     TextView maxText;
 
-    TradeSearchWindows searchWindows;
-
     public TradeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;

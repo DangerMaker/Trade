@@ -51,7 +51,7 @@ public class TradeCancelFragment extends BaseFragment implements Interval {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.trade_fragment_option;
+        return R.layout.trade_fragment_cancel;
     }
 
     @Override

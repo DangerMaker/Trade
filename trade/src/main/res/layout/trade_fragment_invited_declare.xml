@@ -126,13 +126,21 @@
             android:layout_marginLeft="20dp"
             android:text="@string/trade_declare_num" />
 
-        <EditText
+        <!--<EditText-->
+            <!--android:id="@+id/num"-->
+            <!--android:layout_weight="1"-->
+            <!--style="@style/trade_edit_content_custom"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_toRightOf="@id/title"-->
+            <!--/>-->
+
+        <com.ez08.trade.ui.view.AdjustEditText
             android:id="@+id/num"
             android:layout_weight="1"
-            style="@style/trade_edit_content_custom"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/title"
-            />
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_height="40dp"/>
 
         <TextView
             style="@style/trade_edit_title_custom"

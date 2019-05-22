@@ -1,6 +1,5 @@
 package com.ez08.trade.ui.invite;
 
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,8 +19,8 @@ import com.ez08.trade.net.Response;
 import com.ez08.trade.net.ResponseCallback;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.ui.BaseFragment;
-import com.ez08.trade.ui.trade.TradeBuyFragment;
 import com.ez08.trade.ui.trade.entity.TradeStockEntity;
+import com.ez08.trade.ui.view.AdjustEditText;
 import com.ez08.trade.user.TradeUser;
 import com.ez08.trade.user.UserHelper;
 
@@ -39,7 +38,7 @@ public class TradeDeclareFragment extends BaseFragment implements View.OnClickLi
 
     EditText buyMan;
     EditText code;
-    EditText num;
+    AdjustEditText num;
 
     Button submit;
 
@@ -77,7 +76,7 @@ public class TradeDeclareFragment extends BaseFragment implements View.OnClickLi
 
         if (type == 0) {
             maxTitle.setText("可用股数");
-            numTitle.setText("预受数量");
+            numTitle.setText("预售数量");
         } else {
             maxTitle.setText("解除上限");
             numTitle.setText("解除数量");
@@ -199,6 +198,7 @@ public class TradeDeclareFragment extends BaseFragment implements View.OnClickLi
                                 String[] var = split[1].split(",");
                                 String maxValue = var[0];
                                 max.setText(maxValue);
+                                num.setText(maxValue);
                             }
                         }
 
@@ -224,7 +224,7 @@ public class TradeDeclareFragment extends BaseFragment implements View.OnClickLi
             return;
         }
 
-        post(stockEntity.stkcode, stockEntity.fixprice, num.getText().toString());
+        post(stockEntity.stkcode, stockEntity.fixprice, num.getText());
     }
 
     private void post(String code, String price, String qty) {

@@ -1,12 +1,17 @@
 package com.ez08.trade.ui.trade;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ez08.trade.Constant;
@@ -17,6 +22,8 @@ import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
 import com.ez08.trade.net.ResponseCallback;
+import com.ez08.trade.tools.DialogUtils;
+import com.ez08.trade.tools.MathUtils;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.Interval;
 import com.ez08.trade.ui.trade.adpater.TradeEntrustAdapter;
@@ -39,14 +46,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class TradeHandFragment extends BaseFragment implements Interval {
+public class TradeHandFragment extends BaseFragment implements Interval,View.OnClickListener {
 
-    RecyclerView recyclerView;
-    GridLayoutManager manager;
-    List<Object> mList;
+    RelativeLayout bizhong;
+    ImageView flag;
+    TextView moneytype;
+    TextView yingkui;
+    TextView kequ;
+    TextView keyong;
+    TextView shizhi;
+    TextView zongzichan;
 
-    FundsGridItemDecoration itemDecoration;
-    TradeHandAdapter adapter;
+    int position = 0;
+    String[] itemKey = new String[]{"人民币","港元","美元"};
+    String[] itemValue = new String[]{"0","1","2"};
+    int[] itemPic = new int[]{R.drawable.china_3x,R.drawable.usa_3x,R.drawable.china_3x};
 
     public static TradeHandFragment newInstance() {
         Bundle args = new Bundle();
@@ -55,43 +69,35 @@ public class TradeHandFragment extends BaseFragment implements Interval {
         return fragment;
     }
 
-    String yu_e;
-    String ke_yong;
-    String ke_qu;
-
     @Override
     protected int getLayoutResource() {
-        return R.layout.trade_fragment_option;
+        return R.layout.trade_fragment_hand;
     }
 
     @Override
     protected void onCreateView(View rootView) {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        manager = new GridLayoutManager(mContext, 2);
-        recyclerView.setLayoutManager(manager);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int i) {
-                return adapter.getSpan(i);
-            }
-        });
+        bizhong = rootView.findViewById(R.id.bizhong);
+        flag = rootView.findViewById(R.id.flag_country);
+        moneytype = rootView.findViewById(R.id.money_type);
+        yingkui = rootView.findViewById(R.id.yingkui);
+        kequ = rootView.findViewById(R.id.kequ);
+        keyong = rootView.findViewById(R.id.keyong);
+        shizhi = rootView.findViewById(R.id.shizhi);
+        zongzichan = rootView.findViewById(R.id.zongzichan);
+        bizhong.setOnClickListener(this);
 
-        adapter = new TradeHandAdapter(mContext);
-        recyclerView.setAdapter(adapter);
+        getFunds();
+    }
 
-        itemDecoration = new FundsGridItemDecoration(mContext);
-        recyclerView.addItemDecoration(itemDecoration);
-//        orgid,custid,fundid,moneytype,fundbal,fundavl,marketvalue,fund,fundseq,stkvalue,fundbuy,fundsale,fundfrz,fundlastbal,fundloan,fundassetadjamt,stkassetadjamt
-//        1009,109000512,109000512,0,15261051.82,1907761.49,68809465995.52,15261051.82,0,68794204943.70,13084078.12,0.00,269212.11,15261051.82,0.00,0.00,0.00
-//        1009,109000512,109000512,1,805189.90,805189.90,809770.90,805189.90,0,4581.00,0.00,0.00,0.00,805189.90,0.00,0.00,0.00
-//        1009,109000512,109000512,2,10000000182.37,10000000182.37,10000007333.81,10000000182.37,0,7151.44,0.00,0.00,0.00,10000000182.37,0.00,0.00,0.00
-
-        String body = "FUN=410502&TBL_IN=fundid,moneytype,remark;,,;";
+    private void getFunds(){
+        String body = "FUN=410502&TBL_IN=fundid,moneytype,remark;," +
+                itemValue[position] + ",;";
         BizRequest request = new BizRequest();
         request.setBody(body);
         request.setCallback(new ResponseCallback() {
             @Override
             public void callback(Client client, Response data) {
+                dismissBusyDialog();
                 if (data.isSucceed()) {
                     Log.e("TradeHandFragment", data.getData());
                     try {
@@ -105,20 +111,22 @@ public class TradeHandFragment extends BaseFragment implements Interval {
                                 String out = uri.getQueryParameter(key);
                                 String[] split = out.split(";");
                                 String[] var = split[1].split(",");
-                                yu_e = var[4];
-                                ke_yong = var[5];
-                                double f = Double.parseDouble(yu_e) - Double.parseDouble(ke_yong);
-                                DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-                                ke_qu = decimalFormat.format(f);//format 返
 
-                                mList = new ArrayList<>();
-                                mList.add(new TradeFundsEntity("币种", "0"));
-                                mList.add(new TradeFundsEntity("余额", yu_e));
-                                mList.add(new TradeFundsEntity("可用", ke_yong));
-                                mList.add(new TradeFundsEntity("可取", ke_qu));
-                                mList.add(new TradeTitleHandEntity());
-//                                mList.add(new TradeHandEntity());
-                                adapter.addAll(mList);
+                                //资金可用金额
+                                String fundavl = var[5];
+                                //资产总值
+                                String marketvalue = var[6];
+                                //市值
+                                String stkvalue = var[9];
+                                //冻结金额
+                                String fundfrz = var[12];
+                                //可取
+                               double kequValue =  Double.parseDouble(marketvalue) - Double.parseDouble(fundfrz);
+
+                                keyong.setText(fundavl);
+                                zongzichan.setText(marketvalue);
+                                shizhi.setText(stkvalue);
+//                                kequ.setText(MathUtils.format2Num(kequValue));
                             }
                         }
                     } catch (Exception e) {
@@ -127,102 +135,30 @@ public class TradeHandFragment extends BaseFragment implements Interval {
                 }
             }
         });
-        ClientHelper.get().send(request);
 
-        getStockList();
-    }
-
-    public void getStockList() {
-//        String body = "FUN=410504&TBL_IN=market,secuid,stkcode,fundid;,,,;";
-//        BizRequest request = new BizRequest();
-//        request.setBody(body);
-//        request.setCallback(new ResponseCallback() {
-//            @Override
-//            public void callback(Client client, Response data) {
-//                if (data.isSucceed()) {
-//                    Log.e("TradeHandFragment", data.getData());
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(data.getData());
-//                        String content = jsonObject.getString("content");
-//                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
-//                        Set<String> pn = uri.getQueryParameterNames();
-//                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
-//                            String key = it.next().toString();
-//                            if ("TBL_OUT".equals(key)) {
-//                                String out = uri.getQueryParameter(key);
-//                                String[] split = out.split(";");
-//                                for (int i = 1; i < split.length; i++) {
-//                                    String[] var = split[i].split(",");
-//                                    TradeHandEntity entity = new TradeHandEntity();
-//                                    entity.stkcode = var[2];
-//                                    entity.stkname = var[3];
-//                                    entity.stkbal = var[5];
-//                                    entity.stkavl = var[6];
-//                                    entity.costprice = var[8];
-//                                    entity.mktval = var[11];
-//                                    entity.income = var[12];
-//                                    entity.lastprice = var[13];
-//                                    mList.add(entity);
-//                                    adapter.clearAndAddAll(mList);
-//                                }
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-//        ClientHelper.get().send(request);
-
-        String body = "FUN=410503&TBL_IN=market,fundid,secuid,stkcode,qryflag,count,poststr;" +
-                "," +
-                UserHelper.getUser().fundid + "," +
-                ",,1,100,;";
-        BizRequest request = new BizRequest();
-        request.setBody(body);
-        request.setCallback(new ResponseCallback() {
-            @Override
-            public void callback(Client client, Response data) {
-                if (data.isSucceed()) {
-                    Log.e("TradeHandFragment", data.getData());
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(data.getData());
-//                        String content = jsonObject.getString("content");
-//                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
-//                        Set<String> pn = uri.getQueryParameterNames();
-//                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
-//                            String key = it.next().toString();
-//                            if ("TBL_OUT".equals(key)) {
-//                                String out = uri.getQueryParameter(key);
-//                                String[] split = out.split(";");
-//                                for (int i = 1; i < split.length; i++) {
-//                                    String[] var = split[i].split(",");
-//                                    TradeHandEntity entity = new TradeHandEntity();
-//                                    entity.stkcode = var[2];
-//                                    entity.stkname = var[3];
-//                                    entity.stkbal = var[5];
-//                                    entity.stkavl = var[6];
-//                                    entity.costprice = var[8];
-//                                    entity.mktval = var[11];
-//                                    entity.income = var[12];
-//                                    entity.lastprice = var[13];
-//                                    mList.add(entity);
-//                                    adapter.clearAndAddAll(mList);
-//                                }
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-                }
-            }
-        });
+        showBusyDialog();
         ClientHelper.get().send(request);
     }
 
     @Override
     public void OnPost() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == bizhong){
+            DialogUtils.showSelectDialog(mContext, itemKey, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(position != which){
+                        position = which;
+                        flag.setImageDrawable(ContextCompat.getDrawable(mContext,itemPic[position]));
+                        moneytype.setText(itemKey[position]);
+                        getFunds();
+                    }
+                }
+            });
+        }
     }
 }

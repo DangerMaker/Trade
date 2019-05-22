@@ -75,6 +75,45 @@ public class MathUtils {
         String result;
         DecimalFormat df;
         switch (exp) {
+            case 2:
+                df = new DecimalFormat("0");
+                result = df.format(value);
+                break;
+            case 3:
+                df = new DecimalFormat("0.0");
+                result = df.format(value);
+                break;
+            case 4:
+                df = new DecimalFormat("0.00");
+                result = df.format(value);
+                break;
+            case 5:
+                df = new DecimalFormat("0.000");
+                result = df.format(value);
+                break;
+            case 6:
+                df = new DecimalFormat("0.0000");
+                result = df.format(value);
+                break;
+            case 7:
+                df = new DecimalFormat("0.00000");
+                result = df.format(value);
+                break;
+            default:
+                return "";
+
+        }
+        return result;
+    }
+
+    public static String formatNum(double value, int exp) {
+        String result;
+        DecimalFormat df;
+        switch (exp) {
+            case 2:
+                df = new DecimalFormat("0");
+                result = df.format(value);
+                break;
             case 3:
                 df = new DecimalFormat("0.0");
                 result = df.format(value);

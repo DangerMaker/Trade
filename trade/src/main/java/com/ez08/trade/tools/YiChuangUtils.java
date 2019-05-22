@@ -2,6 +2,14 @@ package com.ez08.trade.tools;
 
 public class YiChuangUtils {
 
+//    NSString *const UNSZQuoteTypes = @"对方最优价格,本方最优价格,即时成交剩余撤销,五档即成剩撤,全额成交或撤销";
+//    NSString *const UNSHQuoteTypes = @"五档即成剩撤,五档即成转限价";
+//    NSString *const UNConversionTypes = @"可转债转股,债券回售";
+
+    public static final String[] szQuoteType = new String[]{"对方最优价格","本方最优价格","即时成交剩余撤销","五档即成剩撤","全额成交或撤销"};
+    public static final String[] shQuoteType = new String[]{"五档即成剩撤","五档即成转限价"};
+    public static final String[] conversionType = new String[]{"可转债转股","债券回售"};
+
     public static String getMoneyType(String type) {
         if (type.equals("0")) {
             return "人民币";
@@ -75,6 +83,59 @@ public class YiChuangUtils {
             return "卖出";
         }
 
+    }
+
+
+//    + (NSString *)characterToBsflag:(NSString *)characters tradetype:(NSString *__nullable)tradetype {
+//        NSString *result = nil;
+//        if (!tradetype) {
+//            if ([characters isEqualToString:@"可转债转股"]) {
+//                result = @"0G";
+//            } else if ([characters isEqualToString:@"债券回售"]) {
+//                result = @"0H";
+//            }
+//        } else if ([tradetype isEqualToString:@"B"] || [tradetype isEqualToString:@"S"]) {
+//            BOOL type = [tradetype isEqualToString:@"B"];
+//            if ([characters isEqualToString:@"限价委托"]) {
+//                result = type ? @"0B" : @"0S";
+//            } else if ([characters isEqualToString:@"对方最优价格"]) {
+//                result = type ? @"0a" : @"0f";
+//            } else if ([characters isEqualToString:@"本方最优价格"]) {
+//                result = type ? @"0b" : @"0g";
+//            } else if ([characters isEqualToString:@"即时成交剩余撤销"]) {
+//                result = type ? @"0c" : @"0h";
+//            } else if ([characters isEqualToString:@"五档即成剩撤"]) {
+//                result = type ? @"0d" : @"0i";
+//            } else if ([characters isEqualToString:@"全额成交或撤销"]) {
+//                result = type ? @"0e" : @"0j";
+//            } else if ([characters isEqualToString:@"五档即成转限价"]) {
+//                result = type ? @"0q" : @"0r";
+//            }
+//        }
+//        return result;
+//    }
+
+    public static String getTagByQuoteName(String bsFlag,String quoteType){
+        String result ="";
+        if(bsFlag.equals("B") || bsFlag.equals("S")){
+            boolean type = bsFlag.equals("B");
+            if(quoteType.equals("限价委托")){
+                result = type ? "0B" : "0S";
+            }else if(quoteType.equals("对方最优价格")){
+                result = type ? "0a" : "0f";
+            }else if(quoteType.equals("本方最优价格")){
+                result = type ? "0b" : "0g";
+            }else if(quoteType.equals("即时成交剩余撤销")){
+                result = type ? "0c" : "0h";
+            }else if(quoteType.equals("五档即成剩撤")){
+                result = type ? "0d" : "0i";
+            }else if(quoteType.equals("全额成交或撤销")){
+                result = type ? "0e" : "0j";
+            }else if(quoteType.equals("五档即成转限价")){
+                result = type ? "0q" : "0r";
+            }
+        }
+        return result;
     }
 
 }

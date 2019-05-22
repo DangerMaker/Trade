@@ -28,7 +28,7 @@ public class TradeActivity extends IntervalActivity implements View.OnClickListe
     TradeOptionFragment fragment1;
     TradeOptionFragment fragment2;
     TradeCancelFragment fragment3;
-    TradeHandFragment fragment4;
+    TradeOptionFragment fragment4;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,13 +48,13 @@ public class TradeActivity extends IntervalActivity implements View.OnClickListe
             if (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 2) != null)
                 fragment3 = (TradeCancelFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 2);
             if (getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 3) != null)
-                fragment4 = (TradeHandFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 3);
+                fragment4 = (TradeOptionFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.info_tab_pager + ":" + 3);
 
         } else {
             fragment1 = TradeOptionFragment.newInstance(0);
             fragment2 = TradeOptionFragment.newInstance(1);
             fragment3 = TradeCancelFragment.newInstance();
-            fragment4 = TradeHandFragment.newInstance();
+            fragment4 = TradeOptionFragment.newInstance(2);
         }
 
         mFragmentList.clear();

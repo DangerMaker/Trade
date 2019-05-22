@@ -1,6 +1,7 @@
 package com.ez08.trade.ui.trade.entity;
 
 public class TradeHandEntity {
+    public String market;
     public String stkname;
     public String stkcode;
     public String stkbal; //持仓股票

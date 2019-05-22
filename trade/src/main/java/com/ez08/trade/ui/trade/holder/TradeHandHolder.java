@@ -1,9 +1,12 @@
 package com.ez08.trade.ui.trade.holder;
 
+import android.content.res.ColorStateList;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ez08.trade.R;
+import com.ez08.trade.tools.MathUtils;
+import com.ez08.trade.tools.ScreenUtil;
 import com.ez08.trade.ui.BaseViewHolder;
 import com.ez08.trade.ui.trade.entity.TradeHandEntity;
 
@@ -17,6 +20,7 @@ public class TradeHandHolder extends BaseViewHolder<TradeHandEntity> {
     TextView stock_available;
     TextView stock_prime;
     TextView stock_last;
+    ColorStateList color;
 
     public TradeHandHolder(ViewGroup itemView) {
         super(itemView, R.layout.trade_holder_handing);
@@ -32,13 +36,35 @@ public class TradeHandHolder extends BaseViewHolder<TradeHandEntity> {
 
     @Override
     public void setData(TradeHandEntity data) {
+        if (Double.parseDouble(data.income) <= 0) {
+            color = ScreenUtil.setTextColor(getContext(), R.color.trade_blue);
+        } else {
+            color = ScreenUtil.setTextColor(getContext(), R.color.trade_red);
+        }
+
+        double scale = (Double.parseDouble(data.lastprice) - Double.parseDouble(data.costprice)) / Double.parseDouble(data.costprice) * 100;
+        profit_percent.setText(MathUtils.format2Num(scale) + "%");
+
         txt_name.setText(data.stkname);
         txt_code.setText(data.stkcode);
         profit_num.setText(data.income);
-        profit_percent.setText("- -");
         stock_hand.setText(data.stkbal);
         stock_available.setText(data.stkavl);
         stock_prime.setText(data.costprice);
         stock_last.setText(data.lastprice);
+
+        setTextColor();
+    }
+
+
+    private void setTextColor() {
+        txt_name.setTextColor(color);
+        txt_code.setTextColor(color);
+        profit_num.setTextColor(color);
+        profit_percent.setTextColor(color);
+        stock_hand.setTextColor(color);
+        stock_available.setTextColor(color);
+        stock_prime.setTextColor(color);
+        stock_last.setTextColor(color);
     }
 }
