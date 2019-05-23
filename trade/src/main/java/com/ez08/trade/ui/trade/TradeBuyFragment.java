@@ -3,10 +3,12 @@ package com.ez08.trade.ui.trade;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
@@ -56,6 +58,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
 
     int type;
     String bsflag = "B";
+    String postFlag = "0B";
 
     @Override
     protected int getLayoutResource() {
@@ -77,15 +80,25 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         tradeView = rootView.findViewById(R.id.trade_view);
 
         type = getArguments().getInt("type");
-        tradeView.setBorderColor(type);
+        if (type == 0) {
+            bsflag = "B";
+            tradeView.setBorderColor(bsflag, "限价委托");
+        } else if (type == 1) {
+            bsflag = "S";
+            tradeView.setBorderColor(bsflag, "限价委托");
+        } else if (type == 2) {
+            bsflag = "B";
+            tradeView.setBorderColor(bsflag, "市价委托");
+        } else if (type == 3) {
+            bsflag = "S";
+            tradeView.setBorderColor(bsflag, "市价委托");
+        }
         tradeView.setDelegate(this);
 
         newestPrice = rootView.findViewById(R.id.newest_price);
         lastPrice = rootView.findViewById(R.id.last_price);
         upPrice = rootView.findViewById(R.id.limit_up_price);
         downPrice = rootView.findViewById(R.id.limit_down_price);
-
-        bsflag = type == 0 ? "B" : "S";
     }
 
     TradeStockEntity stockEntity;
@@ -120,6 +133,10 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                                 String out = uri.getQueryParameter(key);
                                 String[] split = out.split(";");
                                 String[] var = split[1].split(",");
+                                if(var == null){
+                                    DialogUtils.showSimpleDialog(mContext,"股票输入有误");
+                                    return;
+                                }
                                 stockEntity.market = var[0];
                                 stockEntity.stkname = var[2];
                                 stockEntity.stkcode = var[3];
@@ -159,7 +176,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                 user.secuid + "," +
                 user.fundid + "," +
                 code + "," +
-                bsflag + "," +
+                postFlag + "," +
                 price + "," + "," + "," + "," + "," + "," + "," + "," + "," +
                 ";";
 
@@ -204,7 +221,13 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     }
 
     @Override
-    public void submit(final String code, final String price, final String num) {
+    public void submit(final String code, final String price, final String num, final String abc) {
+        this.postFlag = YiChuangUtils.getTagByQuoteName(bsflag, abc);
+        if (TextUtils.isEmpty(postFlag)) {
+            Toast.makeText(mContext, "请选择报价方式", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         TradeUser user = UserHelper.getUserByMarket(stockEntity.market);
         if (user == null) {
             return;
@@ -215,7 +238,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                         "股票代码：" + stockEntity.stkcode + "  " + stockEntity.stkname + "\n" +
                         "委托价格：" + price + "\n" +
                         "委托数量：" + num + "\n" +
-                        "委托方式：" + "限价委托" + "\n" +
+                        "委托方式：" + abc + "\n" +
                         "股东代码：" + user.secuid
                 , new DialogInterface.OnClickListener() {
                     @Override
@@ -241,7 +264,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                 user.secuid + "," +
                 user.fundid + "," +
                 code + "," +
-                bsflag + "," +
+                postFlag + "," +
                 price + "," +
                 qty + "," +
                 "0" +

@@ -1,5 +1,7 @@
 package com.ez08.trade.tools;
 
+import android.text.TextUtils;
+
 public class YiChuangUtils {
 
 //    NSString *const UNSZQuoteTypes = @"对方最优价格,本方最优价格,即时成交剩余撤销,五档即成剩撤,全额成交或撤销";
@@ -116,6 +118,9 @@ public class YiChuangUtils {
 //    }
 
     public static String getTagByQuoteName(String bsFlag,String quoteType){
+        if(TextUtils.isEmpty(quoteType)){
+            return "";
+        }
         String result ="";
         if(bsFlag.equals("B") || bsFlag.equals("S")){
             boolean type = bsFlag.equals("B");

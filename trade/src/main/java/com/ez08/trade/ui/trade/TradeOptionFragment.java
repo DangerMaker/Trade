@@ -68,6 +68,10 @@ public class TradeOptionFragment extends BaseFragment implements Interval {
             fragment = TradeBuyFragment.newInstance(1);
         }else if(type == 2){
             fragment = TradeHandFragment.newInstance();
+        }else if(type == 3){
+            fragment = TradeBuyFragment.newInstance(2);
+        }else if(type == 4){
+            fragment = TradeBuyFragment.newInstance(3);
         }
 
         transaction.add(R.id.container, fragment);

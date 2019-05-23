@@ -1,6 +1,7 @@
 package com.ez08.trade.ui.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
@@ -30,6 +32,7 @@ import com.ez08.trade.net.ResponseCallback;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.MathUtils;
 import com.ez08.trade.tools.ScreenUtil;
+import com.ez08.trade.tools.YiChuangUtils;
 import com.ez08.trade.ui.trade.OptionsDelegate;
 import com.ez08.trade.ui.trade.TradeSearchWindows;
 import com.ez08.trade.ui.trade.entity.TradeStockEntity;
@@ -53,6 +56,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
 
     RelativeLayout layout1;
     RelativeLayout layout2;
+    RelativeLayout layoutQuote;
     TextView full;
     TextView half;
     TextView one_three;
@@ -60,6 +64,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
     Button submitBtn;
 
     TextView maxText;
+    TextView quoteWay;
 
     public TradeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,6 +84,8 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
 
         layout1 = findViewById(R.id.layout1);
         layout2 = findViewById(R.id.layout2);
+        layoutQuote = findViewById(R.id.layout_quote);
+        layoutQuote.setOnClickListener(this);
         full = findViewById(R.id.full);
         half = findViewById(R.id.half);
         one_three = findViewById(R.id.one_three);
@@ -92,6 +99,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
         submitBtn = findViewById(R.id.submit);
         submitBtn.setOnClickListener(this);
         maxText = findViewById(R.id.available_num);
+        quoteWay = findViewById(R.id.quote_way);
 
         change();
 
@@ -147,7 +155,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
     }
 
     public void change() {
-        if (type == 0) {
+        if (type.equals("B")) {
             editText1.setBackgroundResource(R.drawable.trade_input_white_bg);
             editText2.setBackgroundResource(R.drawable.trade_input_white_bg);
             plusPriceIv.setColorFilter(getResources().getColor(R.color.trade_red));
@@ -157,6 +165,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
             inputCode.setBackgroundResource(R.drawable.trade_input_bg);
             layout1.setBackgroundResource(R.drawable.trade_input_bg);
             layout2.setBackgroundResource(R.drawable.trade_input_bg);
+            layoutQuote.setBackgroundResource(R.drawable.trade_input_bg);
             full.setBackgroundResource(R.drawable.trade_input_bg);
             half.setBackgroundResource(R.drawable.trade_input_bg);
             one_three.setBackgroundResource(R.drawable.trade_input_bg);
@@ -173,6 +182,7 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
             inputCode.setBackgroundResource(R.drawable.trade_input_bg_blue);
             layout1.setBackgroundResource(R.drawable.trade_input_bg_blue);
             layout2.setBackgroundResource(R.drawable.trade_input_bg_blue);
+            layoutQuote.setBackgroundResource(R.drawable.trade_input_bg_blue);
             full.setBackgroundResource(R.drawable.trade_input_bg_blue);
             half.setBackgroundResource(R.drawable.trade_input_bg_blue);
             one_three.setBackgroundResource(R.drawable.trade_input_bg_blue);
@@ -182,10 +192,19 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    int type = 0;
+    String type = "B";
+    String quoteType = "限价委托";
 
-    public void setBorderColor(int type) {
-        this.type = type;
+    public void setBorderColor(String bsflag, String quoteType) {
+        this.type = bsflag;
+        this.quoteType = quoteType;
+        if (!quoteType.equals("")) {
+            layout1.setVisibility(VISIBLE);
+            layoutQuote.setVisibility(GONE);
+        } else {
+            layout1.setVisibility(GONE);
+            layoutQuote.setVisibility(VISIBLE);
+        }
         if (inputCode != null) {
             change();
         }
@@ -240,16 +259,36 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
                 t1 = 0;
             }
             editText2.setText(t1 + "");
-        }else if(v == full){
+        } else if (v == full) {
             editText2.setText(MathUtils.save100(maxValue));
-        }else if(v == half){
-            editText2.setText(MathUtils.save100(maxValue/2));
-        }else if(v == one_three){
-            editText2.setText(MathUtils.save100(maxValue/3));
-        }else if(v == one_fourth){
-            editText2.setText(MathUtils.save100(maxValue/4));
-        }else if(v == submitBtn){
-            delegate.submit(entity.stkcode,editText1.getText().toString(),editText2.getText().toString());
+        } else if (v == half) {
+            editText2.setText(MathUtils.save100(maxValue / 2));
+        } else if (v == one_three) {
+            editText2.setText(MathUtils.save100(maxValue / 3));
+        } else if (v == one_fourth) {
+            editText2.setText(MathUtils.save100(maxValue / 4));
+        } else if (v == submitBtn) {
+            delegate.submit(entity.stkcode, editText1.getText().toString(), editText2.getText().toString(), quoteWay.getText().toString());
+        } else if (v == layoutQuote) {
+            if (entity == null || entity.market == null) {
+                Toast.makeText(context, "请输入股票代码", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            final String[] select;
+            if (entity.market.equals("0")) {
+                select = YiChuangUtils.szQuoteType;
+            } else if (entity.market.equals("1")) {
+                select = YiChuangUtils.shQuoteType;
+            } else {
+                select = new String[]{};
+            }
+            DialogUtils.showSelectDialog(context, select, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    quoteWay.setText(select[which]);
+                }
+            });
         }
     }
 
@@ -266,10 +305,10 @@ public class TradeView extends LinearLayout implements View.OnClickListener {
         this.requestFocusFromTouch();
     }
 
-    public void setMax(String max){
-        if(type == 0) {
+    public void setMax(String max) {
+        if (type.equals("B")) {
             maxText.setText("最大可买 " + max + " 股");
-        }else{
+        } else {
             maxText.setText("最大可卖 " + max + " 股");
         }
 //        editText2.setText(max);

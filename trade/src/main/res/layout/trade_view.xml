@@ -21,6 +21,7 @@
         android:textSize="13dp" />
 
     <RelativeLayout
+        android:visibility="visible"
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="35dp"
@@ -55,6 +56,33 @@
             android:padding="5dp"
             android:textColorHint="@color/trade_input_text"
             android:textSize="15dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/layout_quote"
+        android:layout_width="match_parent"
+        android:background="@drawable/trade_input_white_bg"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/quote_way"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:text="报价方式"
+            android:textColor="@color/trade_black"
+            android:textSize="15dp" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:src="@drawable/nav_down" />
 
     </RelativeLayout>
 
