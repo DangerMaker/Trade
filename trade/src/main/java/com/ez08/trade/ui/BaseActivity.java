@@ -3,6 +3,7 @@ package com.ez08.trade.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -48,6 +49,10 @@ public class BaseActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    protected ColorStateList setTextColor(int color) {
+        return context.getResources().getColorStateList(color);
     }
 
 }

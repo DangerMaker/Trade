@@ -33,6 +33,8 @@ struct STradeBaseHead
     DWORD        dwRawSize;
     bool        bEncrypt;
     DWORD        dwCRC_BeforeEnc;
+    DWORD		dwCRC_Raw_With_Id;		//原始数据CRC，加上wPid
+    DWORD		dwReserved;
 
     std::string toJSON()
     {

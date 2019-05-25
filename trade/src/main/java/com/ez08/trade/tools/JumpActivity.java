@@ -14,11 +14,14 @@ import com.ez08.trade.ui.fresh_stock.TradePeihaoActivity;
 import com.ez08.trade.ui.fresh_stock.TradeZhongqianActivity;
 import com.ez08.trade.ui.invite.TradeInvitedBuyActivity;
 import com.ez08.trade.ui.invite.TradeInvitedBuyActivity1;
+import com.ez08.trade.ui.other.TradeOrderActivity;
 import com.ez08.trade.ui.other.TradeOtherServiceActivity;
+import com.ez08.trade.ui.other.TradeTransStockActivity;
 import com.ez08.trade.ui.query.TradeQueryActivity;
 import com.ez08.trade.ui.trade.TradeActionActivity;
 import com.ez08.trade.ui.trade.TradeActivity;
 import com.ez08.trade.ui.trade.TradeBatActivity;
+import com.ez08.trade.ui.trade.TradeBuySellActivity;
 import com.ez08.trade.ui.trade.TradeMarketPriceActivity;
 import com.ez08.trade.ui.user.TradeChangeMsgActivity;
 import com.ez08.trade.ui.user.TradeChangePwdActivity;
@@ -46,17 +49,17 @@ public class JumpActivity {
         classMap.put("中签查询", TradeZhongqianActivity.class);
         classMap.put("新股申购代缴款查询", TradeDaijiaoActivity.class);
         classMap.put("银行转账", TradeBankActivity.class);
-//        classMap.put("预埋单", TradeBankActivity.class);
+        classMap.put("预埋单", TradeOrderActivity.class);
         classMap.put("预受要约", TradeInvitedBuyActivity1.class);
-        classMap.put("网络投票", TradeWebActivity.class);
+        classMap.put("转股回售", TradeTransStockActivity.class);
+        classMap.put("网络投票", TradeNetVoteActivity.class);
         classMap.put("权证行权", TradeOtherServiceActivity.class);
         classMap.put("股东资料", TradeShareholdersActivity.class);
         classMap.put("客户风险级别查询", TradeRiskLevelActivity.class);
         classMap.put("客户风险级别测评", TradeWebActivity.class);
         classMap.put("修改资料", TradeChangeMsgActivity.class);
         classMap.put("修改密码", TradeChangePwdActivity.class);
-//        classMap.put("批量委托", TradeQueryActivity.class);
-//        classMap.put("对买对卖", TradeQueryActivity.class);
+        classMap.put("对买对卖", TradeBuySellActivity.class);
     }
 
     public static void start(Context context, String action) {

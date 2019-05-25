@@ -14,8 +14,8 @@ public class TradeBatActivity extends SegmentsTemplateActivity {
 
     @Override
     protected void initFragmentList(ArrayList<EasyFragment> mFragmentList) {
-        mFragmentList.add(new EasyFragment(TradeOptionFragment.newInstance(0), titles[0]));
-        mFragmentList.add(new EasyFragment(TradeOptionFragment.newInstance(1), titles[1]));
+        mFragmentList.add(new EasyFragment(TradeOptionFragment.newInstance(5), titles[0]));
+        mFragmentList.add(new EasyFragment(TradeOptionFragment.newInstance(6), titles[1]));
     }
 
 }

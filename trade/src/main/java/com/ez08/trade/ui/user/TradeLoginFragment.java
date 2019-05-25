@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ez08.trade.Constant;
@@ -35,6 +36,7 @@ import com.ez08.trade.net.YCBizClient;
 import com.ez08.trade.net.YCRequest;
 import com.ez08.trade.net.YCSocketClient;
 import com.ez08.trade.tools.ActivityCallback;
+import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.SharedPreferencesHelper;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.TradeMenuActivity;
@@ -64,6 +66,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     ImageView pickAccount;
     TextView account;
     AppCompatCheckBox checkBox;
+    LinearLayout accountLayout;
 
     EditText usernameEdit;
     EditText passwordEdit;
@@ -71,6 +74,10 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
 
     boolean isCanSaved;
     String accountValue;
+    final String[] items = new String[]{"资金账户", "深A", "沪Ａ", "深Ｂ", "沪Ｂ", "沪港通", "股转Ａ", "股转Ｂ", "开放式基金", "深港通"};
+    final String[] itemsCode = new String[]{"Z", "0", "1", "2", "3", "5", "6", "7", "J", "S"};
+
+    String defaultItem = "Z";
 
     SharedPreferencesHelper sharedPreferencesHelper;
 
@@ -99,6 +106,9 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         usernameEdit = rootView.findViewById(R.id.username_edit);
         passwordEdit = rootView.findViewById(R.id.password_edit);
         checkEdit = rootView.findViewById(R.id.check_code);
+        verityImageView.setOnClickListener(this);
+        accountLayout = rootView.findViewById(R.id.account_layout);
+        accountLayout.setOnClickListener(this);
 
         SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.trade_register_tips));
         builder.setSpan(new BlueUnderLineClickableSpan() {
@@ -128,7 +138,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
             usernameEdit.setText(accountValue);
         }
 
-        createVerityClientAndSend(0);
+        createVerityClientAndSend();
     }
 
     private void createBizClient() {
@@ -169,13 +179,13 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setLoginPackage(Client client) {
-        LoginRequest request = new LoginRequest("Z", "109000512", "123123", "1011", "123");
+        LoginRequest request = new LoginRequest(defaultItem, "109000512", "123123", "1011", reserve);
         request.setCallback(new ResponseCallback() {
             @Override
             public void callback(Client client, Response data) {
-                if (data.isSucceed()) {
-                    Log.e(TAG, data.getData());
-                    try {
+                try {
+                    if (data.isSucceed()) {
+                        Log.e(TAG, data.getData());
                         JSONObject jsonObject = new JSONObject(data.getData());
                         int succ = jsonObject.getInt("bLoginSucc");
                         if (succ == 0) {
@@ -185,7 +195,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                             List<TradeUser> list = new ArrayList<>();
                             String array = jsonObject.getString("items");
                             JSONArray jsonArray = new JSONArray(array);
-                            for (int i = 0; i < jsonArray.length() ; i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject index = jsonArray.getJSONObject(i);
                                 TradeUser user = new TradeUser();
                                 user.market = index.getString("sz_market");
@@ -197,21 +207,26 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                                 list.add(user);
                             }
                             UserHelper.setUserList(list);
-//                            ((ActivityCallback) getActivity()).replace();
-                            startActivity(new Intent(mContext,TradeMenuActivity.class));
-                            ((Activity)mContext).finish();
+                            startActivity(new Intent(mContext, TradeMenuActivity.class));
+                            ((Activity) mContext).finish();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+                    } else {
+                        JSONObject jsonObject = new JSONObject(data.getData());
+                        String msg = jsonObject.getString("szError");
+                        DialogUtils.showSimpleDialog(mContext, msg);
                     }
+                    dismissBusyDialog();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                dismissBusyDialog();
             }
+
         });
         client.send(request);
     }
 
-    private void createVerityClientAndSend(final int type) { //获取验证码图片 type = 0  验证验证码 type = 1
+    private void createVerityClientAndSend() { //获取验证码图片 type = 0  验证验证码 type = 1
         final YCSocketClient verityClient = new YCSocketClient(host, Constant.VERITY_SERVER_PORT);
         verityClient.setOnConnectListener(new ConnectListener() {
             @Override
@@ -234,8 +249,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
 
     byte[] szId;
     byte[] code;
-    int reserve = 0;
-    int checkId = 0;
+    String reserve = "0";
 
     private void sendVerityPicRequest(Client socketClient) {
         VerityPicRequest request = new VerityPicRequest();
@@ -245,6 +259,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
             @Override
             public void callback(Client client, final Response data) {
                 if (data.isSucceed()) {
+                    Log.e("VerityPicRequest", data.getData());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -253,10 +268,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                                 String pic = jsonObject.getString("bufPic");
                                 byte[] picReal = Base64.decode(pic, DEFAULT);
                                 szId = jsonObject.getString("szId").getBytes("GB2312");
-                                reserve = jsonObject.getInt("reserve");
-                                code = "2219".getBytes("GB2312");
-
-                                Log.e("VerityPicRequest", data.getData());
+                                reserve = jsonObject.getString("reserve");
                                 Bitmap decodedByte = BitmapFactory.decodeByteArray(picReal, 0, picReal.length);
                                 verityImageView.setImageBitmap(decodedByte);
                             } catch (JSONException e) {
@@ -274,13 +286,13 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     }
 
     public void showPickDialog() {
-        final String[] items = new String[]{"资金账户", "深A", "沪Ａ", "深Ｂ", "沪Ｂ", "沪港通", "股转Ａ", "股转Ｂ", "开放式基金", "深港通"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setItems(items,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         account.setText(items[which]);
+                        defaultItem = itemsCode[which];
                     }
                 });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -298,12 +310,15 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_btn) {
-//            ((ActivityCallback) getActivity()).replace();
             showBusyDialog();
             accountValue = usernameEdit.getText().toString();
             sharedPreferencesHelper.put("accountValue", accountValue);
             createBizClient();
         } else if (v.getId() == R.id.account_type_nav) {
+            showPickDialog();
+        } else if (v.getId() == R.id.safe_code_iv) {
+            createVerityClientAndSend();
+        }else if(v.getId() == R.id.account_layout){
             showPickDialog();
         }
     }

@@ -68,6 +68,7 @@ bool encrypt(STradeBaseHead* pHead,BYTE* body)
     DWORD dwCheckSum = 0;
     for(DWORD    ii=0; ii<pHead->dwBodySize;    dwCheckSum += (DWORD)((BYTE*) pBody)[ii++]);
     pHead->dwCRC_BeforeEnc    = dwCheckSum;
+    pHead->dwCRC_Raw_With_Id  = dwCheckSum + pHead->wPid;
     pHead->bEncrypt    = true;
 
     TRC4(pBody, pHead->dwBodySize, rc4_key, 16);

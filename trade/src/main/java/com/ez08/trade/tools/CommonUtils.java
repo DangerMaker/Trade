@@ -7,7 +7,7 @@ import java.util.Date;
 public class CommonUtils {
 
     public static String deleteAllCRLF(String input) {
-        return input.replaceAll("((\r\n)|\n)[\\s\t ]*", " ").replaceAll(
+        return input.replaceAll("((\r\n)|\n)[\\s\t ]*", "").replaceAll(
                 "^((\r\n)|\n)", "");
     }
 

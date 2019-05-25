@@ -37,6 +37,12 @@
         <activity android:name=".ui.trade.TradeMarketPriceActivity" />
         <activity android:name=".ui.trade.TradeBatActivity" />
         <activity android:name=".ui.invite.TradeInvitedBuyActivity1" />
+        <activity android:name=".ui.other.TradeTransStockActivity" />
+        <activity android:name=".ui.trade.TradeBuySellActivity" />
+        <activity android:name=".ui.other.TradeOrderActivity" />
+        <activity android:name=".ui.other.TradeNewOrderActivity" />
+        <activity android:name=".ui.vote.TradeVoteListActivity" />
+        <activity android:name=".ui.vote.TradeVoteDetailActivity" />
 
     </application>
     

@@ -121,6 +121,15 @@ public class YiChuangUtils {
         if(TextUtils.isEmpty(quoteType)){
             return "";
         }
+
+        if(quoteType.equals("可转债转股")){
+            return "0G";
+        }
+
+        if(quoteType.equals("债券回售")){
+            return "0H";
+        }
+
         String result ="";
         if(bsFlag.equals("B") || bsFlag.equals("S")){
             boolean type = bsFlag.equals("B");

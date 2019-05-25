@@ -1,6 +1,7 @@
 package com.ez08.trade.ui.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -25,6 +26,7 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
     View line5;
     View line6;
 
+    String hint;
     int color = R.color.trade_pull_text;
     double unit = 100;
     int exp = 2; //MathUtils.formatNum(exp)
@@ -35,6 +37,18 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
 
     public AdjustEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray ta = context.obtainStyledAttributes(attrs,
+                R.styleable.AdjustEditText, 0, 0);
+
+        hint = ta.getString(R.styleable.AdjustEditText_hint);
+        unit = ta.getFloat(R.styleable.AdjustEditText_unit,0.01f);
+        if(unit >= 100){
+            exp = 2;
+        }else{
+            exp = 4;
+        }
+
         inflate(context, R.layout.trade_view_adjust, this);
         plus = findViewById(R.id.plus);
         reduce = findViewById(R.id.reduce);
@@ -49,7 +63,7 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
         line5 = findViewById(R.id.line5);
         line6 = findViewById(R.id.line6);
 
-        edit.setText("0");
+        edit.setHint(hint);
         setColor(color);
     }
 
@@ -69,13 +83,14 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
 
     public void setText(String text) {
         if (Double.parseDouble(text) < unit) {
-            edit.setText(MathUtils.formatNum(Double.parseDouble(text), exp));
             plus.setClickable(false);
             reduce.setClickable(false);
         }else{
             plus.setClickable(true);
             reduce.setClickable(true);
         }
+        edit.setText(MathUtils.formatNum(Double.parseDouble(text), exp));
+        edit.clearFocus();
     }
 
     public String getText() {

@@ -369,7 +369,7 @@ public class YCBizClient implements Client {
      * @author lilongtan
      */
     public class EzMessageDecoder extends ByteToMessageDecoder {
-        public final int HEADSIZE = 20;
+        public final int HEADSIZE = 28;
 
         @Override
         protected void decode(ChannelHandlerContext arg0, ByteBuf buffer,

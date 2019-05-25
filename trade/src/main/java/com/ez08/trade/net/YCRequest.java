@@ -34,6 +34,8 @@ public class YCRequest {
         if (callback == null)
             return;
 
+
+
         if (response.getPid() == 2009) {
             response.setSucceed(false);
         }else {

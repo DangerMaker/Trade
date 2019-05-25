@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ import com.ez08.trade.tools.YiChuangUtils;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.trade.entity.TradeStockEntity;
 import com.ez08.trade.ui.view.FiveAndTenView;
-import com.ez08.trade.ui.view.TradeView;
+import com.ez08.trade.ui.view.TradeLimitView;
 import com.ez08.trade.user.TradeUser;
 import com.ez08.trade.user.UserHelper;
 
@@ -47,7 +48,8 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         return fragment;
     }
 
-    TradeView tradeView;
+    RelativeLayout tradeViewContainer;
+    ITradeView tradeViewImpl;
     FiveAndTenView fiveAndTenView;
     EditText editText;
 
@@ -57,8 +59,8 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     TextView downPrice;
 
     int type;
-    String bsflag = "B";
-    String postFlag = "0B";
+    boolean bsflag = true;
+    int layout = -1;
 
     @Override
     protected int getLayoutResource() {
@@ -77,23 +79,37 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         });
 
         editText = rootView.findViewById(R.id.trade_entrust_price);
-        tradeView = rootView.findViewById(R.id.trade_view);
+        tradeViewContainer = rootView.findViewById(R.id.trade_view);
 
         type = getArguments().getInt("type");
         if (type == 0) {
-            bsflag = "B";
-            tradeView.setBorderColor(bsflag, "限价委托");
+            bsflag = true;
+            layout = R.layout.trade_view_limite_quote;
         } else if (type == 1) {
-            bsflag = "S";
-            tradeView.setBorderColor(bsflag, "限价委托");
+            bsflag = false;
+            layout = R.layout.trade_view_limite_quote;
         } else if (type == 2) {
-            bsflag = "B";
-            tradeView.setBorderColor(bsflag, "市价委托");
+            bsflag = true;
+            layout = R.layout.trade_view_market_quote;
         } else if (type == 3) {
-            bsflag = "S";
-            tradeView.setBorderColor(bsflag, "市价委托");
+            bsflag = false;
+            layout = R.layout.trade_view_market_quote;
+        } else if(type == 4){
+            bsflag = true;
+            layout = R.layout.trade_view_bat_quote;
+        }else if(type == 5){
+            bsflag = false;
+            layout = R.layout.trade_view_bat_quote;
+        }else if(type == 6){
+            bsflag = true;
+            layout = R.layout.trade_view_trans_quote;
         }
-        tradeView.setDelegate(this);
+
+        View view = View.inflate(mContext, layout, null);
+        tradeViewContainer.addView(view);
+        tradeViewImpl = (ITradeView) view;
+        tradeViewImpl.setBsflag(bsflag);
+        tradeViewImpl.setDelegate(this);
 
         newestPrice = rootView.findViewById(R.id.newest_price);
         lastPrice = rootView.findViewById(R.id.last_price);
@@ -133,8 +149,8 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                                 String out = uri.getQueryParameter(key);
                                 String[] split = out.split(";");
                                 String[] var = split[1].split(",");
-                                if(var == null){
-                                    DialogUtils.showSimpleDialog(mContext,"股票输入有误");
+                                if (var == null) {
+                                    DialogUtils.showSimpleDialog(mContext, "股票输入有误");
                                     return;
                                 }
                                 stockEntity.market = var[0];
@@ -176,7 +192,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                 user.secuid + "," +
                 user.fundid + "," +
                 code + "," +
-                postFlag + "," +
+                (bsflag ? "B" : "S") + "," +
                 price + "," + "," + "," + "," + "," + "," + "," + "," + "," +
                 ";";
 
@@ -200,7 +216,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                                 String[] split = out.split(";");
                                 String[] var = split[1].split(",");
                                 String max = var[0];
-                                tradeView.setMax(max);
+                                tradeViewImpl.setMax(max);
                             }
                         }
 
@@ -221,8 +237,8 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     }
 
     @Override
-    public void submit(final String code, final String price, final String num, final String abc) {
-        this.postFlag = YiChuangUtils.getTagByQuoteName(bsflag, abc);
+    public void submit(final String code, final String price,final int single, final String num, final String quoteType) {
+        final String postFlag = YiChuangUtils.getTagByQuoteName(bsflag ? "B" : "S", quoteType);
         if (TextUtils.isEmpty(postFlag)) {
             Toast.makeText(mContext, "请选择报价方式", Toast.LENGTH_SHORT).show();
             return;
@@ -232,24 +248,32 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         if (user == null) {
             return;
         }
-        String option = type == 0 ? "买入" : "卖出";
+        String option = bsflag ? "买入" : "卖出";
         DialogUtils.showTwoButtonDialog(mContext, option + "交易确认", "确定" + option,
                 "操作类型：" + option + "\n" +
                         "股票代码：" + stockEntity.stkcode + "  " + stockEntity.stkname + "\n" +
                         "委托价格：" + price + "\n" +
                         "委托数量：" + num + "\n" +
-                        "委托方式：" + abc + "\n" +
+                        (single == 0 ? "" : ("单笔数量：" + single + "\n") ) +
+                        "委托方式：" + quoteType + "\n" +
                         "股东代码：" + user.secuid
                 , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        post(code, price, num);
+                        if(single != 0){
+                            int times = Integer.parseInt(num)/single;
+                            for (int i = 0; i < times; i++) {
+                                post(code,price,single + "",postFlag);
+                            }
+                        }else {
+                            post(code, price, num, postFlag);
+                        }
                     }
                 });
 
     }
 
-    private void post(String code, String price, String qty) {
+    private void post(String code, String price, String qty, String postFlag) {
         TradeUser user = UserHelper.getUserByMarket(stockEntity.market);
         if (user == null) {
             return;
@@ -353,7 +377,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                         }
                         entity.bid = list2;
 
-                        tradeView.setStockEntity(stockEntity);
+                        tradeViewImpl.setStockEntity(stockEntity);
                         fiveAndTenView.setLevel1(stockEntity);
                         setIndex(stockEntity);
                     }

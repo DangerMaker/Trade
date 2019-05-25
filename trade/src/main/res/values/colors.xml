@@ -16,5 +16,6 @@
     <color name="trade_input_bg">#f2f5f9</color>
     <color name="trade_item_text">@color/trade_black</color>
     <color name="trade_dan_yellow">#FFFACD</color>
+    <color name="trade_qing">#F0FFFF</color>
 
 </resources>
