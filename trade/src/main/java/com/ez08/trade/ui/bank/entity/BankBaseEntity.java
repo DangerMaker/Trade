@@ -1,4 +1,4 @@
-package com.ez08.trade.entity;
+package com.ez08.trade.ui.bank.entity;
 
 public class BankBaseEntity {
     public String bankcode;

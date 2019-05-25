@@ -26,16 +26,14 @@ import com.ez08.trade.R;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.ConnectListener;
-import com.ez08.trade.net.KeyExchangeRequest;
-import com.ez08.trade.net.LoginRequest;
+import com.ez08.trade.net.request.KeyExchangeRequest;
+import com.ez08.trade.net.request.LoginRequest;
 import com.ez08.trade.net.NativeTools;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
-import com.ez08.trade.net.VerityPicRequest;
-import com.ez08.trade.net.YCBizClient;
-import com.ez08.trade.net.YCRequest;
-import com.ez08.trade.net.YCSocketClient;
-import com.ez08.trade.tools.ActivityCallback;
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.net.request.VerityPicRequest;
+import com.ez08.trade.net.client.YCBizClient;
+import com.ez08.trade.net.client.YCSocketClient;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.SharedPreferencesHelper;
 import com.ez08.trade.ui.BaseFragment;
@@ -48,13 +46,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.util.Base64.DEFAULT;
+import static com.ez08.trade.Constant.STORE_LOGIN_NAME;
 
 public class TradeLoginFragment extends BaseFragment implements View.OnClickListener {
 
@@ -121,7 +118,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
         registerBtn.setText(builder);
         registerBtn.setMovementMethod(LinkMovementMethod.getInstance());
 
-        sharedPreferencesHelper = new SharedPreferencesHelper(mContext, "login_var");
+        sharedPreferencesHelper = new SharedPreferencesHelper(mContext, STORE_LOGIN_NAME);
         isCanSaved = (boolean) sharedPreferencesHelper.getSharedPreference("isCanSaved", true);
         accountValue = (String) sharedPreferencesHelper.getSharedPreference("accountValue", "");
 
@@ -164,7 +161,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
 
     private void sendHandShakePackage(Client client) {
         KeyExchangeRequest request = new KeyExchangeRequest();
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
@@ -179,8 +176,9 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setLoginPackage(Client client) {
-        LoginRequest request = new LoginRequest(defaultItem, "109000512", "123123", "1011", reserve);
-        request.setCallback(new ResponseCallback() {
+        LoginRequest request = new LoginRequest();
+        request.setBody(defaultItem, "109000512", "123123", "1011", reserve);
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 try {
@@ -190,7 +188,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                         int succ = jsonObject.getInt("bLoginSucc");
                         if (succ == 0) {
                             String msg = jsonObject.getString("szErrMsg");
-                            Log.e(TAG, msg);
+                            DialogUtils.showSimpleDialog(mContext, msg);
                         } else {
                             List<TradeUser> list = new ArrayList<>();
                             String array = jsonObject.getString("items");
@@ -211,15 +209,11 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
                             ((Activity) mContext).finish();
                         }
 
-                    } else {
-                        JSONObject jsonObject = new JSONObject(data.getData());
-                        String msg = jsonObject.getString("szError");
-                        DialogUtils.showSimpleDialog(mContext, msg);
                     }
-                    dismissBusyDialog();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                dismissBusyDialog();
             }
 
         });
@@ -253,9 +247,8 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
 
     private void sendVerityPicRequest(Client socketClient) {
         VerityPicRequest request = new VerityPicRequest();
-        byte[] test = NativeTools.getVerifyCodePackFromJNI(20, 10);
-        request.mData = test;
-        request.setCallback(new ResponseCallback() {
+        request.setBody(30,15);
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, final Response data) {
                 if (data.isSucceed()) {
@@ -318,7 +311,7 @@ public class TradeLoginFragment extends BaseFragment implements View.OnClickList
             showPickDialog();
         } else if (v.getId() == R.id.safe_code_iv) {
             createVerityClientAndSend();
-        }else if(v.getId() == R.id.account_layout){
+        } else if (v.getId() == R.id.account_layout) {
             showPickDialog();
         }
     }

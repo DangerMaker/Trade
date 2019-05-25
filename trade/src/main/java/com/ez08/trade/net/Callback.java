@@ -1,5 +1,5 @@
 package com.ez08.trade.net;
 
-public interface ResponseCallback {
+public interface Callback {
     void callback(Client client, Response data);
 }

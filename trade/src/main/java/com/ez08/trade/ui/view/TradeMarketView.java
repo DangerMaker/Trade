@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ez08.trade.R;
+import com.ez08.trade.tools.CommonUtils;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.MathUtils;
 import com.ez08.trade.tools.YiChuangUtils;
@@ -177,7 +178,7 @@ public class TradeMarketView extends LinearLayout implements ITradeView, View.On
             delegate.submit(entity.stkcode, price, 0, editText2.getText().toString(), quoteWay.getText().toString());
         } else if (v == layoutQuote) {
             if (entity == null || entity.market == null) {
-                Toast.makeText(context, "请输入股票代码", Toast.LENGTH_SHORT).show();
+                CommonUtils.show(context, "请输入股票代码");
                 return;
             }
 

@@ -1,4 +1,4 @@
-package com.ez08.trade.entity;
+package com.ez08.trade.ui.user.entity;
 
 //FUN=410501&TBL_OUT=custid,regflag,bondreg,opendate,market,secuid,name,fundid,secuseq,status;
 //                   109000512,0,0,20070801,0,0001262540,闻之梅,0,0,0;

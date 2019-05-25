@@ -2,26 +2,22 @@ package com.ez08.trade.ui.vote;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
-import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
+import com.ez08.trade.net.Callback;
 import com.ez08.trade.ui.BaseActivity;
 
 import org.json.JSONObject;
@@ -76,7 +72,7 @@ public class TradeVoteDetailActivity extends BaseActivity implements View.OnClic
                 entity.votecode + ";";
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {

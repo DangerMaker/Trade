@@ -8,18 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
-import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
-import com.ez08.trade.tools.ActivityCallback;
+import com.ez08.trade.net.Callback;
 import com.ez08.trade.tools.DatePickerCallback;
 import com.ez08.trade.ui.BaseActivity;
 import com.ez08.trade.ui.BaseAdapter;
@@ -179,7 +177,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
@@ -233,7 +231,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
@@ -291,7 +289,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
@@ -352,7 +350,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {

@@ -1,8 +1,11 @@
-package com.ez08.trade.net;
+package com.ez08.trade.net.request;
 
 import android.util.Log;
 
 import com.ez08.trade.Constant;
+import com.ez08.trade.net.NativeTools;
+import com.ez08.trade.net.SnFactory;
+import com.ez08.trade.net.YCRequest;
 
 import java.io.UnsupportedEncodingException;
 
@@ -24,36 +27,6 @@ public class BizRequest extends YCRequest {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String bytesToHexString(byte[] src){
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if (src == null || src.length <= 0) {
-
-            return null;
-
-        }
-
-        for (int i = 0; i < src.length; i++) {
-
-            int v = src[i] & 0xFF;
-
-            String hv = Integer.toHexString(v);
-
-            if (hv.length() < 2) {
-
-                stringBuilder.append(0);
-
-            }
-
-            stringBuilder.append(hv);
-
-        }
-
-        return stringBuilder.toString();
-
     }
 
 }

@@ -18,12 +18,13 @@ import android.widget.Toast;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
-import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
-import com.ez08.trade.net.QueryRequest;
+import com.ez08.trade.net.request.QueryRequest;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.tools.CommonUtils;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.MathUtils;
 import com.ez08.trade.tools.YiChuangUtils;
@@ -117,7 +118,7 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
             });
         } else if (v == quoteLayout) {
             if (stockEntity == null || stockEntity.market == null) {
-                Toast.makeText(context, "请输入股票代码", Toast.LENGTH_SHORT).show();
+                CommonUtils.show(context, "请输入股票代码");
                 return;
             }
             final String[] select;
@@ -176,7 +177,7 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();
@@ -228,7 +229,7 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
     private void getHQQuery(final TradeStockEntity entity) {
         QueryRequest request = new QueryRequest();
         request.setBody(entity.market, entity.stkcode);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();

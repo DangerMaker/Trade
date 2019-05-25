@@ -1,11 +1,11 @@
-package com.ez08.trade.net;
+package com.ez08.trade.net.request;
 
 import android.util.Log;
 
-import com.ez08.trade.Constant;
+import com.ez08.trade.net.NativeTools;
+import com.ez08.trade.net.SnFactory;
+import com.ez08.trade.net.YCRequest;
 import com.ez08.trade.tools.YiChuangUtils;
-
-import java.io.UnsupportedEncodingException;
 
 public class QueryRequest extends YCRequest {
     public QueryRequest() {

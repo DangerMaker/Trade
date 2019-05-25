@@ -1,11 +1,18 @@
-package com.ez08.trade.net;
+package com.ez08.trade.net.client;
 
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
+
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.net.Client;
+import com.ez08.trade.net.ConnectListener;
+import com.ez08.trade.net.NetPackage;
+import com.ez08.trade.net.Response;
+import com.ez08.trade.net.YCRequest;
+import com.ez08.trade.net.NativeTools;
 
 import org.json.JSONObject;
 
@@ -79,7 +86,7 @@ public class YCBizClient implements Client {
     //请求存储表
     private Hashtable<Integer, YCRequest> mRequestTable;
     private Hashtable<Integer, Integer> mTimeOutTable;
-    private Hashtable<ResponseCallback, IntentFilter> mListenerTable;
+    private Hashtable<Callback, IntentFilter> mListenerTable;
 
     YCBizClient client = this;
 
@@ -193,34 +200,6 @@ public class YCBizClient implements Client {
         return mState;
     }
 
-    public boolean startHandShake(String msg) {
-        HandShakeRequest request = new HandShakeRequest(13);
-        int sn = SnFactory.getSnClient();//需要获取请求序号
-        request.sn = sn;
-        if (mState == STATE_CONNECTED) {
-            mState = STATE_HANDSHAKEING;
-            mRequestTable.put(sn, request);
-            send2Net(request);
-            return true;
-        } else
-            return false;
-
-    }
-
-    public void handShakeSucucess() {
-        mState = STATE_HANDSHAKEED;
-        //将队列中等待的数据包发送服务器
-        if (mRequestTable != null && mRequestTable.size() > 0) {
-            Set<Integer> set = mRequestTable.keySet();
-            for (Integer sn : set) {
-                YCRequest request = mRequestTable.get(sn);
-                if (request.mState == YCRequest.REQUEST_STATE_READY) {
-                    send2Net(request);
-                }
-            }
-        }
-    }
-
     /**
      * 发送请求，可以使用EzRequest作为参数，也可以使用EzRequest中的属性直接作为参数，由send创建EzRequest对象
      * 返回值为网络请求SN序号
@@ -285,7 +264,7 @@ public class YCBizClient implements Client {
      * @param handler
      * @param filter
      */
-    public void registerListener(ResponseCallback handler, IntentFilter filter) {
+    public void registerListener(Callback handler, IntentFilter filter) {
         if (handler == null)
             return;
         IntentFilter f = mListenerTable.get(handler);
@@ -300,7 +279,7 @@ public class YCBizClient implements Client {
 
     }
 
-    public void unregisterListener(ResponseCallback handler) {
+    public void unregisterListener(Callback handler) {
         mListenerTable.remove(handler);
     }
 
@@ -397,7 +376,7 @@ public class YCBizClient implements Client {
                 return; // (2)
             }
 
-            if(pid == 110){
+            if (pid == 110) {
                 buffer.skipBytes(bodyLen);
                 logger.info("heart receiver 110.......");
                 return;
@@ -407,9 +386,9 @@ public class YCBizClient implements Client {
             buffer.readBytes(bodydecoded);
 
             String jsonbody;
-            if(pid == 2009) {
-                jsonbody = NativeTools.parseTradeGateErrorFromJNI(headdecoded,bodydecoded);
-            }else{
+            if (pid == 2009) {
+                jsonbody = NativeTools.parseTradeGateErrorFromJNI(headdecoded, bodydecoded);
+            } else {
                 jsonbody = mRequestTable.get(sn).parse(headdecoded, bodydecoded);
             }
             logger.info("EzMessageDecoder");
@@ -468,9 +447,9 @@ public class YCBizClient implements Client {
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             super.channelInactive(ctx);
             logger.info("channelInactive连接关闭成功 channelId = " + ctx.toString());
-            if (YCBizClient.this.ctx  != null) {
-                if (YCBizClient.this.ctx  == ctx) {//mCtx不为空并且和当前值相同，说明曾经连接成功过，这时才算是连接丢失，
-                    YCBizClient.this.ctx  = null;
+            if (YCBizClient.this.ctx != null) {
+                if (YCBizClient.this.ctx == ctx) {//mCtx不为空并且和当前值相同，说明曾经连接成功过，这时才算是连接丢失，
+                    YCBizClient.this.ctx = null;
                     mState = STATE_NONE;
                     connectLost();
                 }

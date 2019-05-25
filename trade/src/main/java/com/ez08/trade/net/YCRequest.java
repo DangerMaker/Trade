@@ -2,7 +2,7 @@ package com.ez08.trade.net;
 
 public class YCRequest {
 
-    ResponseCallback callback;
+    Callback callback;
     public int sn;
     public long mSendTime;    //发数据的时间
     public int mTimeout;    //超时时间
@@ -12,11 +12,11 @@ public class YCRequest {
         this.sn = sn;
     }
 
-    public YCRequest(ResponseCallback callback) {
+    public YCRequest(Callback callback) {
         this.callback = callback;
     }
 
-    public void setCallback(ResponseCallback callback) {
+    public void setCallback(Callback callback) {
         this.callback = callback;
     }
 
@@ -55,16 +55,7 @@ public class YCRequest {
         return "";
     }
 
-    public NetPackage getNetPackage() {
-        NetPackage netPackage = new NetPackage();
-        return netPackage;
-//        NetPakage pakage = new NetPakage(NetPakage.NETPAKAGE_TYPE_DATA);
-//        pakage.sn = mSn;
-//        pakage.action = mAction;
-//        pakage.content = mData;
-//        pakage.contentType = mDataType;
-//        return pakage;
-    }
+
 
     public static final int REQUEST_STATE_READY = 0;
     public static final int REQUEST_STATE_SEND = 1;

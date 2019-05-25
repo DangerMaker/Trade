@@ -13,19 +13,19 @@ import android.widget.Toast;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
-import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
-import com.ez08.trade.net.QueryRequest;
+import com.ez08.trade.net.request.QueryRequest;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.tools.CommonUtils;
 import com.ez08.trade.tools.DialogUtils;
 import com.ez08.trade.tools.MathUtils;
 import com.ez08.trade.tools.YiChuangUtils;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.trade.entity.TradeStockEntity;
 import com.ez08.trade.ui.view.FiveAndTenView;
-import com.ez08.trade.ui.view.TradeLimitView;
 import com.ez08.trade.user.TradeUser;
 import com.ez08.trade.user.UserHelper;
 
@@ -131,7 +131,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();
@@ -198,7 +198,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();
@@ -240,7 +240,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     public void submit(final String code, final String price,final int single, final String num, final String quoteType) {
         final String postFlag = YiChuangUtils.getTagByQuoteName(bsflag ? "B" : "S", quoteType);
         if (TextUtils.isEmpty(postFlag)) {
-            Toast.makeText(mContext, "请选择报价方式", Toast.LENGTH_SHORT).show();
+            CommonUtils.show(mContext, "请选择报价方式");
             return;
         }
 
@@ -299,7 +299,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
 
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();
@@ -343,7 +343,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     private void getHQQuery(final TradeStockEntity entity) {
         QueryRequest request = new QueryRequest();
         request.setBody(entity.market, entity.stkcode);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 dismissBusyDialog();

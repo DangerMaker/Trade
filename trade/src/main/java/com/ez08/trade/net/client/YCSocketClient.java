@@ -1,6 +1,14 @@
-package com.ez08.trade.net;
+package com.ez08.trade.net.client;
 
 import android.content.IntentFilter;
+
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.net.Client;
+import com.ez08.trade.net.ConnectListener;
+import com.ez08.trade.net.NetPackage;
+import com.ez08.trade.net.Response;
+import com.ez08.trade.net.YCRequest;
+import com.ez08.trade.net.NativeTools;
 
 import org.json.JSONObject;
 
@@ -42,7 +50,7 @@ import io.netty.handler.timeout.IdleStateEvent;
  * 8、这里保存握手状态以及加密相关的所有信息，网络请求可以指示是否在握手成功后方可发送，如果是，则握手成功后自动将队列中未发送的请求进行发送
  * 9、支持确保送到发送（可以考虑用加大超时时间来实现，系统对超时时间大于一定时间的请求做持续化处理）
  */
-public class YCSocketClient implements Client{
+public class YCSocketClient implements Client {
 
     private static final String tag = "YCSocketClient";
     private final static Logger logger = Logger.getLogger(tag);
@@ -72,7 +80,7 @@ public class YCSocketClient implements Client{
     //请求存储表
     private Hashtable<Integer, YCRequest> mRequestTable;
     private Hashtable<Integer, Integer> mTimeOutTable;
-    private Hashtable<ResponseCallback, IntentFilter> mListenerTable;
+    private Hashtable<Callback, IntentFilter> mListenerTable;
 
     YCSocketClient client = this;
 
@@ -194,34 +202,6 @@ public class YCSocketClient implements Client{
         return mState;
     }
 
-    public boolean startHandShake(String msg) {
-        HandShakeRequest request = new HandShakeRequest(13);
-        int sn = SnFactory.getSnClient();//需要获取请求序号
-        request.sn = sn;
-        if (mState == STATE_CONNECTED) {
-            mState = STATE_HANDSHAKEING;
-            mRequestTable.put(sn, request);
-            send2Net(request);
-            return true;
-        } else
-            return false;
-
-    }
-
-    public void handShakeSucucess() {
-        mState = STATE_HANDSHAKEED;
-        //将队列中等待的数据包发送服务器
-        if (mRequestTable != null && mRequestTable.size() > 0) {
-            Set<Integer> set = mRequestTable.keySet();
-            for (Integer sn : set) {
-                YCRequest request = mRequestTable.get(sn);
-                if (request.mState == YCRequest.REQUEST_STATE_READY) {
-                    send2Net(request);
-                }
-            }
-        }
-    }
-
     /**
      * 发送请求，可以使用EzRequest作为参数，也可以使用EzRequest中的属性直接作为参数，由send创建EzRequest对象
      * 返回值为网络请求SN序号
@@ -286,7 +266,7 @@ public class YCSocketClient implements Client{
      * @param handler
      * @param filter
      */
-    public void registerListener(ResponseCallback handler, IntentFilter filter) {
+    public void registerListener(Callback handler, IntentFilter filter) {
         if (handler == null)
             return;
         IntentFilter f = mListenerTable.get(handler);
@@ -301,7 +281,7 @@ public class YCSocketClient implements Client{
 
     }
 
-    public void unregisterListener(ResponseCallback handler) {
+    public void unregisterListener(Callback handler) {
         mListenerTable.remove(handler);
     }
 

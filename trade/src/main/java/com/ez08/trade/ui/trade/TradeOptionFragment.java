@@ -12,17 +12,15 @@ import android.view.View;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
-import com.ez08.trade.net.BizRequest;
+import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
-import com.ez08.trade.net.ResponseCallback;
+import com.ez08.trade.net.Callback;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.Interval;
 import com.ez08.trade.ui.trade.adpater.TradeActionAdapter;
 import com.ez08.trade.ui.trade.entity.TradeHandEntity;
-import com.ez08.trade.ui.trade.entity.TradeHeaderEntity;
-import com.ez08.trade.ui.trade.entity.TradeTitleHandEntity;
 import com.ez08.trade.ui.view.LinearItemDecoration;
 import com.ez08.trade.user.UserHelper;
 
@@ -106,7 +104,7 @@ public class TradeOptionFragment extends BaseFragment implements Interval {
                 ",,1,100,;";
         BizRequest request = new BizRequest();
         request.setBody(body);
-        request.setCallback(new ResponseCallback() {
+        request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {

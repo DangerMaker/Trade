@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ez08.trade.R;
+import com.ez08.trade.tools.CommonUtils;
 import com.ez08.trade.ui.view.customtab.EasyFragment;
 import com.ez08.trade.ui.view.customtab.FragmentAdapter;
 import com.ez08.trade.ui.view.customtab.SlidingTabLayout;
@@ -50,7 +51,7 @@ public abstract class SegmentsTemplateActivity extends IntervalActivity implemen
         setTitles();
 
         if(titles == null){
-            Toast.makeText(context,"缺少title",Toast.LENGTH_SHORT).show();
+            CommonUtils.show(context,"缺少title");
             return;
         }
 
