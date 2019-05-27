@@ -123,6 +123,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -136,7 +137,15 @@
                 style="@style/trade_edit_content_custom"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/title"
+                android:layout_weight="1"
                 android:hint="@string/trade_change_edit_hit" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pencil"
+                android:layout_marginRight="10dp"
+                />
 
         </LinearLayout>
 
@@ -149,6 +158,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -162,7 +172,15 @@
                 style="@style/trade_edit_content_custom"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/title"
+                android:layout_weight="1"
                 android:hint="@string/trade_change_edit_hit" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pencil"
+                android:layout_marginRight="10dp"
+                />
 
         </LinearLayout>
 
@@ -174,6 +192,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -184,10 +203,18 @@
 
             <EditText
                 android:id="@+id/email"
+                android:layout_weight="1"
                 style="@style/trade_edit_content_custom"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/title"
                 android:hint="@string/trade_change_edit_hit" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pencil"
+                android:layout_marginRight="10dp"
+                />
 
         </LinearLayout>
 
@@ -199,6 +226,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -211,8 +239,16 @@
                 android:id="@+id/addr"
                 style="@style/trade_edit_content_custom"
                 android:layout_marginLeft="20dp"
+                android:layout_weight="1"
                 android:layout_toRightOf="@id/title"
                 android:hint="@string/trade_change_edit_hit" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pencil"
+                android:layout_marginRight="10dp"
+                />
 
         </LinearLayout>
 

@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
@@ -23,6 +25,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class TradePeihaoActivity extends TradeHisQueryActivity {
+
     @Override
     public String getTitleString() {
         return "配号查询";
@@ -95,5 +98,7 @@ public class TradePeihaoActivity extends TradeHisQueryActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 }

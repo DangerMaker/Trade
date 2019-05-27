@@ -9,7 +9,7 @@ public class TradeBatActivity extends SegmentsTemplateActivity {
 
     @Override
     protected void setTitles() {
-        titles = new String[]{"单账户批量买入", "单账户批量卖出"};
+        titles = new String[]{"批量买入", "批量卖出"};
     }
 
     @Override

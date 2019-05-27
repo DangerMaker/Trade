@@ -35,7 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -62,10 +64,17 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
 
     OrderEntity orderEntity;
 
+    int position = - 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trade_activity_new_order);
+
+        if(getIntent() !=null){
+            position = getIntent().getIntExtra("position",-1);
+            orderEntity = (OrderEntity) getIntent().getSerializableExtra("entity");
+        }
 
         titleView = findViewById(R.id.title);
         titleView.setText("新建预埋单");
@@ -103,6 +112,12 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
+
+        if(position != -1) {
+            code.setText(orderEntity.code);
+            price.setText(orderEntity.price);
+            number.setText(orderEntity.qty);
+        }
     }
 
     @Override
@@ -148,9 +163,13 @@ public class TradeNewOrderActivity extends BaseActivity implements View.OnClickL
             orderEntity.dict = buyDict.getText().toString();
             orderEntity.price = price.getText().toString();
             orderEntity.qty = number.getText().toString();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String date = dateFormat.format(new Date());
+            orderEntity.date = date;
 
             Intent intent = new Intent();
             intent.putExtra("entity", orderEntity);
+            intent.putExtra("position",position);
             setResult(2, intent);
             finish();
         }

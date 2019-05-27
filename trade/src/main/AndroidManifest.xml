@@ -27,8 +27,6 @@
         <activity android:name=".ui.query.TradeQueryEntrustActivity" />
         <activity android:name=".ui.bank.TradeBank2SecurityActivity" />
         <activity android:name=".ui.bank.TradeBankQueryActivity" />
-        <activity android:name=".ui.bank.TradeFundLeftActivity" />
-        <activity android:name=".ui.bank.TradeMyFundsActivity" />
         <activity android:name=".ui.bank.TradeSecurity2BankActivity" />
         <activity android:name=".ui.TradeMenuActivity" />
         <activity android:name=".ui.fresh_stock.TradeDaijiaoActivity" />
@@ -43,6 +41,7 @@
         <activity android:name=".ui.other.TradeNewOrderActivity" />
         <activity android:name=".ui.vote.TradeVoteListActivity" />
         <activity android:name=".ui.vote.TradeVoteDetailActivity" />
+        <activity android:name=".ui.vote.TradeVoteQueryActivity" />
 
     </application>
     

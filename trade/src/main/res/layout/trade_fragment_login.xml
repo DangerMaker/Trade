@@ -44,7 +44,7 @@
                     android:layout_marginLeft="20dip"
                     android:text="账户类型"
                     android:textColor="@color/trade_black"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/account_type"
@@ -54,7 +54,7 @@
                     android:textColor="@color/trade_black"
                     android:layout_weight="1"
                     android:text="资金账户"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/account_type_nav"
@@ -87,7 +87,7 @@
                     android:layout_marginLeft="20dip"
                     android:text="资金账号"
                     android:textColor="@color/trade_black"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
                 <com.ez08.trade.ui.view.MyDelEditetext
                     android:id="@+id/username_edit"
@@ -103,7 +103,7 @@
                     android:singleLine="true"
                     android:textColorHint="#c9c9c9"
                     android:textCursorDrawable="@null"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -126,7 +126,7 @@
                     android:layout_marginLeft="20dip"
                     android:text="交易密码"
                     android:textColor="@color/trade_black"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
 
                 <com.ez08.trade.ui.view.MyDelEditetext
@@ -142,7 +142,7 @@
                     android:maxLines="1"
                     android:textColorHint="#c9c9c9"
                     android:textCursorDrawable="@null"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -165,7 +165,7 @@
                     android:layout_marginLeft="20dip"
                     android:text="安全方式"
                     android:textColor="@color/trade_black"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
                 <com.ez08.trade.ui.view.MyDelEditetext
                     android:id="@+id/check_code"
@@ -181,7 +181,7 @@
                     android:maxLines="1"
                     android:textColorHint="#c9c9c9"
                     android:textCursorDrawable="@null"
-                    android:textSize="17dp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/safe_code_iv"

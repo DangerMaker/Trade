@@ -6,6 +6,7 @@
     android:paddingLeft="8dp"
     android:paddingTop="5dp"
     android:paddingRight="8dp"
+    android:background="@color/trade_little_gray"
     android:paddingBottom="5dp">
 
     <TextView

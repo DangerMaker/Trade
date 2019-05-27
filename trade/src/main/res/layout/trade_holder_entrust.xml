@@ -13,33 +13,36 @@
         android:id="@+id/stock_info"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_marginLeft="12dp"
-        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:text="格力电器"
             android:textColor="@color/trade_pull_text"
             android:textSize="15dp" />
-
-        <com.ez08.trade.ui.view.SingleLineAutoResizeTextView
-            android:id="@+id/txt_code"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dip"
-            android:layout_marginBottom="5dp"
-            android:maxLines="1"
+            android:text="20101001"
+            android:visibility="visible"
             android:textColor="@color/trade_pull_text"
-            app:textColor="@color/trade_red"
-            app:textContent="10:10:23"
-            android:textSize="15dp"
-            app:textSize="14dp"
-            app:autoSizeTextType="uniform"
-            />
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:15:12"
+            android:textColor="@color/trade_pull_text"
+            android:textSize="13dp" />
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +57,6 @@
             android:id="@+id/stock_entrust_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_gravity="right"
             android:text="5.25"
             android:textColor="@color/trade_pull_text"
@@ -66,14 +68,14 @@
         android:id="@+id/stock_layout3"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/stock_entrust_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_gravity="right"
             android:text="500"
             android:textColor="@color/trade_pull_text"
@@ -84,7 +86,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_gravity="right"
             android:textColor="@color/trade_pull_text"
             android:text="300"
@@ -95,14 +96,14 @@
         android:id="@+id/stock_layout4"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/stock_entrust_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_gravity="right"
             android:text="买入"
             android:textColor="@color/trade_pull_text"
@@ -113,7 +114,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_gravity="right"
             android:textColor="@color/trade_pull_text"
             android:text="已成交"

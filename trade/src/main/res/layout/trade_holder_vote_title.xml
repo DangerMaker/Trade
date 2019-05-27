@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="华为电力"
-        android:textStyle="bold"
         android:textColor="@color/trade_black"
         android:layout_marginBottom="5dp"
         android:textSize="18dp" />
@@ -25,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name"
         android:text="150000"
-        android:textColor="@color/trade_black"
+        android:textColor="@color/trade_dark_gray"
         android:textSize="15dp" />
 
 

@@ -25,6 +25,7 @@ public class TradePhAdapter extends BaseAdapter<Object> {
     public static final int TITLE = 1;
     public static final int CHILD = 2;
     public static final int ZQ = 3;
+    public static final int VOTE = 4;
 
 
     public TradePhAdapter(Context context) {

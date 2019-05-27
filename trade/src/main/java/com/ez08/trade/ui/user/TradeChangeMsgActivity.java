@@ -83,6 +83,7 @@ public class TradeChangeMsgActivity extends BaseActivity implements View.OnClick
         request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
+                dismissBusyDialog();
                 if (data.isSucceed()) {
                     Log.e("TradeChangeMsgActivity", data.getData());
                     try {
@@ -126,6 +127,8 @@ public class TradeChangeMsgActivity extends BaseActivity implements View.OnClick
                 }
             }
         });
+
+        showBusyDialog();
         ClientHelper.get().send(request);
     }
 

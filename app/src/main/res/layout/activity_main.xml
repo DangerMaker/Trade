@@ -19,7 +19,7 @@
             android:layout_centerInParent="true"
             android:text="第一创业交易登录"
             android:textColor="@color/trade_white"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
     </RelativeLayout>
 
     <RelativeLayout

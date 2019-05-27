@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
+    android:background="@color/trade_little_gray"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:orientation="horizontal">
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="10dp"
         android:gravity="left"
         android:text="证券名称"
         android:textColor="@color/trade_pull_text"

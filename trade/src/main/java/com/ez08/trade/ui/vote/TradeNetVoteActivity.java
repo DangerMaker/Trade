@@ -39,7 +39,7 @@ public class TradeNetVoteActivity extends BaseActivity implements View.OnClickLi
         }else if(v == title1){
             startActivity(new Intent(this,TradeVoteListActivity.class));
         }else if(v == title2){
-
+            startActivity(new Intent(this,TradeVoteQueryActivity.class));
         }
     }
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="8dp"
+    android:background="@color/trade_little_gray"
     android:paddingRight="8dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"

@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 
 import com.ez08.trade.R;
 
@@ -20,6 +21,8 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
 
     private float textWidth;
     private float textHeight;
+
+    int gravity = 0; //1靠右
 
 
     public SingleLineAutoResizeTextView(Context context) {
@@ -43,6 +46,8 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
         //字体颜色
         textColor = ta.getColor(R.styleable.SingleLineTextView_textColor, Color.BLACK);
 
+        gravity = ta.getInt(R.styleable.SingleLineTextView_gravity,0);
+
         ta.recycle();
 
         initPaint();
@@ -60,7 +65,7 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
         textHeight = paint.descent() - paint.ascent();
     }
 
-    public void setTextContent(String content){
+    public void setTextContent(String content) {
         this.textContent = content;
         textWidth = paint.measureText(textContent);
         requestLayout();
@@ -81,13 +86,13 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
         if (widthMode == MeasureSpec.EXACTLY) {
             width = widthsize;
         } else {
-            width = getPaddingLeft() + (int)(textWidth+0.5) + getPaddingRight();
+            width = getPaddingLeft() + (int) (textWidth + 0.5) + getPaddingRight();
         }
 
         if (heightMode == MeasureSpec.EXACTLY) {
             height = heightSize;
         } else {
-            height = getPaddingTop() + (int)(textHeight+0.5) + getPaddingBottom();
+            height = getPaddingTop() + (int) (textHeight + 0.5) + getPaddingBottom();
         }
 
         setMeasuredDimension(width, height);
@@ -108,7 +113,12 @@ public class SingleLineAutoResizeTextView extends AppCompatTextView {
         Log.i("AUTO_SIZE", "textSize=" + textSize);
         //画出文本
         float textBaseline = (getHeight() - (paint.descent() + paint.ascent())) / 2.0f;
-        canvas.drawText(textContent, (getWidth() -  textWidth) / 2.0f, textBaseline, paint);
+
+        if (gravity == 1) {
+            canvas.drawText(textContent, getWidth() - textWidth, textBaseline, paint);
+        } else {
+            canvas.drawText(textContent, (getWidth() - textWidth) / 2.0f, textBaseline, paint);
+        }
     }
 
 }

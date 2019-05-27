@@ -11,10 +11,10 @@
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="20dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -35,7 +35,7 @@
                 android:id="@+id/newest_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22.22"
+                android:text=""
                 android:textColor="@color/trade_input_text"
                 android:textSize="12dp" />
 
@@ -59,7 +59,7 @@
                 android:id="@+id/last_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22.22"
+                android:text=""
                 android:textColor="@color/trade_input_text"
                 android:textSize="12dp" />
 
@@ -84,7 +84,7 @@
                 android:id="@+id/limit_up_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22.22"
+                android:text=""
                 android:textColor="@color/trade_input_text"
                 android:textSize="12dp" />
 
@@ -109,7 +109,7 @@
                 android:id="@+id/limit_down_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22.22"
+                android:text=""
                 android:textColor="@color/trade_input_text"
                 android:textSize="12dp" />
 

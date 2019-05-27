@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,7 +14,7 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_securities_code" />
+            android:text="证券代码　" />
 
         <EditText
             android:id="@+id/stock_code"
@@ -38,7 +40,7 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_securities_name" />
+            android:text="证券名称　" />
 
         <TextView
             android:id="@+id/stock_name"
@@ -64,7 +66,7 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_available_stock_num" />
+            android:text="可用股数　" />
 
         <TextView
             android:id="@+id/max"
@@ -124,7 +126,7 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_declare_num" />
+            android:text="预受数量　" />
 
         <!--<EditText-->
             <!--android:id="@+id/num"-->
@@ -137,10 +139,14 @@
         <com.ez08.trade.ui.view.AdjustEditText
             android:id="@+id/num"
             android:layout_weight="1"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
             android:layout_width="0dp"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            app:hint="委托数量"
+            app:unit="100"
+            />
 
         <TextView
             style="@style/trade_edit_title_custom"

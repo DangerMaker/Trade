@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.ez08.trade.Constant;
 import com.ez08.trade.R;
+import com.ez08.trade.net.YCParser;
 import com.ez08.trade.ui.user.entity.ShareHoldersEntity;
 import com.ez08.trade.net.request.BizRequest;
 import com.ez08.trade.net.Client;
@@ -23,11 +24,13 @@ import com.ez08.trade.ui.user.adpater.TradeShareHoldersAdapter;
 import com.ez08.trade.ui.user.entity.TradeShareHoldersTitle;
 import com.ez08.trade.ui.view.LinearItemDecoration;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TradeShareholdersActivity extends BaseActivity implements View.OnClickListener {
@@ -63,61 +66,46 @@ public class TradeShareholdersActivity extends BaseActivity implements View.OnCl
         list = new ArrayList<>();
         mList = new ArrayList<>();
         mList.add(new TradeShareHoldersTitle());
-//        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","沪市","153000"));
-//        mList.add(new TradeShareHoldersItem("01234567890(主)","刘宇","深市","153001"));
         adapter.addAll(mList);
 
 //        String body = "FUN=" + "410501" + "&TBL_IN=" + "qryflag,count,poststr;" + "0,10,;";
         String body = "FUN=410501&TBL_IN=fundid,market,secuid,qryflag,count,poststr;,,,1,10,;";
 
-        BizRequest request = new BizRequest();
+        final BizRequest request = new BizRequest();
         request.setBody(body);
         request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
                 if (data.isSucceed()) {
-                    Log.e("ShareHolders", data.getData());
-
                     try {
-                        JSONObject jsonObject = new JSONObject(data.getData());
-                        String content = jsonObject.getString("content");
-                        Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
-                        Set<String> pn = uri.getQueryParameterNames();
-                        for (Iterator it = pn.iterator(); it.hasNext(); ) {
-                            String key = it.next().toString();
-                            if ("TBL_OUT".equals(key)) {
-                                String out = uri.getQueryParameter(key);
-                                String[] split = out.split(";");
-                                for (int i = 1; i < split.length; i++) {
-                                    String[] var = split[i].split(",");
-                                    ShareHoldersEntity entity = new ShareHoldersEntity();
-                                    entity.custid = var[0];
-                                    entity.regflag = var[1];
-                                    entity.bondreg = var[2];
-                                    entity.opendate = var[3];
-                                    entity.market = var[4];
-                                    entity.secuid = var[5];
-                                    entity.name = var[6];
-                                    entity.fundid = var[7];
-                                    entity.secuseq = var[8];
-                                    entity.status = var[9];
-                                    list.add(entity);
-                                }
-                            }
+                        Log.e("ShareHolders", data.getData());
+                        List<Map<String, String>> result = YCParser.parseArray(data.getData());
+                        for (int i = 0; i < result.size(); i++) {
+                            ShareHoldersEntity entity = new ShareHoldersEntity();
+                            entity.custid = result.get(i).get("custid");
+                            entity.regflag = result.get(i).get("regflag");
+                            entity.bondreg = result.get(i).get("bondreg");
+                            entity.opendate = result.get(i).get("opendate");
+                            entity.market = result.get(i).get("market");
+                            entity.secuid = result.get(i).get("secuid");
+                            entity.name = result.get(i).get("name");
+                            entity.fundid = result.get(i).get("fundid");
+                            entity.secuseq = result.get(i).get("secuseq");
+                            entity.status = result.get(i).get("status");
+                            list.add(entity);
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        mList.clear();
+                        mList.add(new TradeShareHoldersTitle());
+                        for (int i = 0; i < list.size(); i++) {
+                            mList.add(list.get(i).getItem());
+                        }
+                        adapter.clearAndAddAll(mList);
+                    } catch (JSONException e) {
+
 
                     }
-                    mList.clear();
-                    mList.add(new TradeShareHoldersTitle());
-                    for (int i = 0; i < list.size(); i++) {
-                        mList.add(list.get(i).getItem());
-                    }
-                    adapter.clearAndAddAll(mList);
                 }
-
             }
         });
         ClientHelper.get().send(request);

@@ -1,6 +1,7 @@
 package com.ez08.trade.ui.other;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,14 +13,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ez08.trade.Constant;
 import com.ez08.trade.R;
+import com.ez08.trade.net.Callback;
+import com.ez08.trade.net.Client;
+import com.ez08.trade.net.ClientHelper;
+import com.ez08.trade.net.Response;
+import com.ez08.trade.net.YCParser;
+import com.ez08.trade.net.request.BizRequest;
+import com.ez08.trade.tools.DialogUtils;
+import com.ez08.trade.tools.SharedPreferencesHelper;
 import com.ez08.trade.ui.BaseActivity;
+import com.ez08.trade.ui.view.LinearItemDecoration;
+import com.ez08.trade.user.TradeUser;
+import com.ez08.trade.user.UserHelper;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TradeOrderActivity extends BaseActivity implements View.OnClickListener {
     ImageView backBtn;
@@ -56,8 +75,8 @@ public class TradeOrderActivity extends BaseActivity implements View.OnClickList
         delete.setOnClickListener(this);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                context, DividerItemDecoration.HORIZONTAL));
+        LinearItemDecoration divider = new LinearItemDecoration(this);
+        recyclerView.addItemDecoration(divider);
 
         list = new ArrayList<>();
         adapter = new MyAdapter();
@@ -75,17 +94,23 @@ public class TradeOrderActivity extends BaseActivity implements View.OnClickList
 
         @Override
         public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
-            OrderEntity entity = list.get(i);
+            final OrderEntity entity = list.get(i);
             myHolder.checkBox.setChecked(entity.isSelect);
+            myHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    entity.isSelect = isChecked;
+                }
+            });
             myHolder.name.setText(entity.name);
             myHolder.dict.setText(entity.dict);
             myHolder.date.setText(entity.date);
             myHolder.price.setText(entity.price);
             myHolder.number.setText(entity.qty);
 
-            if(entity.dict.equals("买入")){
+            if (entity.dict.equals("买入")) {
                 myHolder.dict.setTextColor(setTextColor(R.color.trade_red));
-            }else{
+            } else {
                 myHolder.dict.setTextColor(setTextColor(R.color.trade_green));
             }
         }
@@ -103,6 +128,7 @@ public class TradeOrderActivity extends BaseActivity implements View.OnClickList
         TextView name;
         TextView price;
         TextView number;
+
         public MyHolder(View view) {
             super(view);
             checkBox = view.findViewById(R.id.checkbox);
@@ -120,18 +146,110 @@ public class TradeOrderActivity extends BaseActivity implements View.OnClickList
         if (backBtn == v) {
             finish();
         } else if (submmit == v) {
-
+            for (int i = 0; i < list.size(); i++) {
+                OrderEntity entity = list.get(i);
+                if (entity.isSelect) {
+                    Log.e("Order", entity.name);
+                    post(entity.market, entity.code, entity.price, entity.qty, entity.bsflag);
+                }
+            }
         } else if (copy == v) {
-
+            List<OrderEntity> temp = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isSelect) {
+                    OrderEntity entity = new OrderEntity();
+                    entity.market = list.get(i).market;
+                    entity.name = list.get(i).name;
+                    entity.code = list.get(i).code;
+                    entity.bsflag = list.get(i).bsflag;
+                    entity.price = list.get(i).price;
+                    entity.dict = list.get(i).dict;
+                    entity.qty = list.get(i).qty;
+                    entity.date = list.get(i).date;
+                    entity.isSelect = list.get(i).isSelect;
+                    temp.add(entity);
+                }
+            }
+            list.addAll(temp);
+            adapter.notifyDataSetChanged();
         } else if (newItem == v) {
             Intent intent = new Intent(context, TradeNewOrderActivity.class);
             startActivityForResult(intent, 1);
         } else if (alter == v) {
-
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isSelect) {
+                    OrderEntity entity = new OrderEntity();
+                    entity.market = list.get(i).market;
+                    entity.name = list.get(i).name;
+                    entity.code = list.get(i).code;
+                    entity.bsflag = list.get(i).bsflag;
+                    entity.price = list.get(i).price;
+                    entity.dict = list.get(i).dict;
+                    entity.qty = list.get(i).qty;
+                    entity.date = list.get(i).date;
+                    entity.isSelect = list.get(i).isSelect;
+                    Intent intent = new Intent(context, TradeNewOrderActivity.class);
+                    intent.putExtra("position", i);
+                    intent.putExtra("entity", entity);
+                    startActivityForResult(intent, 1);
+                }
+            }
         } else if (delete == v) {
-
+            for (int i = list.size() - 1; i >= 0; i--) {
+                if (list.get(i).isSelect) {
+                    list.remove(i);
+                }
+            }
+            adapter.notifyDataSetChanged();
         }
 
+    }
+
+    private void post(String market, String code, String price, String qty, String postFlag) {
+        TradeUser user = UserHelper.getUserByMarket(market);
+        if (user == null) {
+            return;
+        }
+        String body = "FUN=410411&TBL_IN=market,secuid,fundid,stkcode,bsflag,price,qty,ordergroup,bankcode,remark;" +
+                market + "," +
+                user.secuid + "," +
+                user.fundid + "," +
+                code + "," +
+                postFlag + "," +
+                price + "," +
+                qty + "," +
+                "0" + "," +
+                "" + "," +
+                ";";
+
+        final BizRequest request = new BizRequest();
+        request.setBody(body);
+        request.setCallback(new Callback() {
+            @Override
+            public void callback(Client client, Response data) {
+                dismissBusyDialog();
+                Log.e(TAG, data.getData());
+                try {
+                    if (data.isSucceed()) {
+                        Map<String, String> result = YCParser.parseObject(data.getData());
+                        DialogUtils.showSimpleDialog(context, "委托成功" + "\n" +
+                                "委托序号：" + result.get("ordersno") + "\n" +
+                                "合同序号：" + result.get("orderid") + "\n" +
+                                "委托批号：" + result.get("ordergroup")
+                        );
+                    } else {
+                        JSONObject jsonObject = new JSONObject(data.getData());
+                        String msg = jsonObject.getString("szError");
+                        DialogUtils.showSimpleDialog(context, msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+        });
+        showBusyDialog();
+        ClientHelper.get().send(request);
     }
 
     @Override
@@ -139,9 +257,20 @@ public class TradeOrderActivity extends BaseActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 2) {
             OrderEntity entity = (OrderEntity) data.getSerializableExtra("entity");
-            Log.e("onActivityResult", entity.name);
-            list.add(entity);
+            if (data.getIntExtra("position", -1) == -1) {
+                list.add(entity);
+            } else {
+                int pos = data.getIntExtra("position", -1);
+                list.remove(pos);
+                list.add(pos, entity);
+            }
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

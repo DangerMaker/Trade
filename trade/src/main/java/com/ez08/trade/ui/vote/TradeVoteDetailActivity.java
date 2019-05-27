@@ -19,6 +19,7 @@ import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
 import com.ez08.trade.net.Callback;
 import com.ez08.trade.ui.BaseActivity;
+import com.ez08.trade.ui.view.LinearItemDecoration;
 
 import org.json.JSONObject;
 
@@ -46,8 +47,8 @@ public class TradeVoteDetailActivity extends BaseActivity implements View.OnClic
         backBtn.setOnClickListener(this);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                context, DividerItemDecoration.HORIZONTAL));
+        LinearItemDecoration divider = new LinearItemDecoration(this);
+        recyclerView.addItemDecoration(divider);
 
         list = new ArrayList<>();
         adapter = new TradeVoteDetailAdapter(this);

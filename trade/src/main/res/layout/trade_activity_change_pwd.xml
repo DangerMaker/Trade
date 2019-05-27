@@ -19,7 +19,7 @@
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_pwd_type1" />
+            android:text="选择交易类型" />
 
         <TextView
             android:id="@+id/type"
@@ -55,11 +55,11 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/original_title"
+            android:id="@+id/title1"
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_old_pwd" />
+            android:text="当前交易密码" />
 
         <EditText
             android:id="@+id/original"
@@ -82,10 +82,11 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/title2"
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_new_pwd" />
+            android:text="新交易密码　" />
 
         <EditText
             android:id="@+id/new_pwd"
@@ -108,10 +109,11 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/title3"
             style="@style/trade_edit_title_custom"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="@string/trade_confirm_pwd" />
+            android:text="确认交易密码" />
 
         <EditText
             android:id="@+id/repeat"

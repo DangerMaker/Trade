@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import java.util.List;
 
 public abstract class TradeHisQueryActivity extends BaseActivity implements View.OnClickListener, DatePickerCallback {
 
+    protected ImageView backBtn;
     protected TextView titleView;
     protected RecyclerView recyclerView;
     protected LinearLayoutManager manager;
@@ -78,6 +81,9 @@ public abstract class TradeHisQueryActivity extends BaseActivity implements View
         titleStub.setLayoutResource(getListTitleLayout());
         titleStub.setVisibility(View.VISIBLE);
 
+        backBtn = findViewById(R.id.img_back);
+        backBtn.setOnClickListener(this);
+
         mList = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
@@ -111,6 +117,8 @@ public abstract class TradeHisQueryActivity extends BaseActivity implements View
             DatePickerFragment adf = DatePickerFragment.newInstance(1, closeYear, closeMonth, closeDay);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             adf.show(ft, "456");
+        }else  if(v == backBtn){
+            finish();
         }
     }
 

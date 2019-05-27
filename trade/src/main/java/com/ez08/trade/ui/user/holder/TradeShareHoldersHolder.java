@@ -4,6 +4,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ez08.trade.R;
+import com.ez08.trade.tools.YiChuangUtils;
 import com.ez08.trade.ui.BaseViewHolder;
 import com.ez08.trade.ui.trade.entity.TradeTitleEntrustEntity;
 import com.ez08.trade.ui.user.entity.TradeShareHoldersItem;
@@ -26,7 +27,7 @@ public class TradeShareHoldersHolder extends BaseViewHolder<TradeShareHoldersIte
     public void setData(TradeShareHoldersItem data) {
         stockholders_code.setText(data.secuid);
         stockholders_name.setText(data.name);
-        market_type.setText(data.market);
-        stockholders_code.setText(data.custid);
+        market_type.setText(YiChuangUtils.getMarketType(data.market));
+        funds_account.setText(data.custid);
     }
 }

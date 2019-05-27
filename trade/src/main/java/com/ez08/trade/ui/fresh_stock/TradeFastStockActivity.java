@@ -124,7 +124,7 @@ public class TradeFastStockActivity extends BaseActivity implements View.OnClick
                                     }
                                 }
 
-                                tips.setText("您今日的申购额度为沪市" + ALines + "股,深市" + Slines + "股");
+                                tips.setText("您今日的申购额度为沪市" + ALines + "股，深市" + Slines + "股");
                             }
                         }
                     } catch (Exception e) {

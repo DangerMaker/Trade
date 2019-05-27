@@ -36,7 +36,9 @@ public class TradeChangePwdActivity extends BaseActivity implements View.OnClick
     TextView titleView;
 
     TextView typeTV;
-    TextView originalTitle;
+    TextView title1;
+    TextView title2;
+    TextView title3;
     EditText original;
     EditText newPwd;
     EditText repeat;
@@ -60,7 +62,9 @@ public class TradeChangePwdActivity extends BaseActivity implements View.OnClick
         selectPwdType.setOnClickListener(this);
 
         typeTV = findViewById(R.id.type);
-        originalTitle = findViewById(R.id.original_title);
+        title1 = findViewById(R.id.title1);
+        title2 = findViewById(R.id.title2);
+        title3 = findViewById(R.id.title3);
         original = findViewById(R.id.original);
         newPwd = findViewById(R.id.new_pwd);
         repeat = findViewById(R.id.repeat);
@@ -69,10 +73,14 @@ public class TradeChangePwdActivity extends BaseActivity implements View.OnClick
 
         if (type == 0) {
             typeTV.setText("交易密码");
-            originalTitle.setText("交易密码");
+            title1.setText("当前交易密码");
+            title2.setText("新交易密码　");
+            title3.setText("确认交易密码");
         } else {
             typeTV.setText("资金密码");
-            originalTitle.setText("资金密码");
+            title1.setText("当前资金密码");
+            title2.setText("新资金密码　");
+            title3.setText("确认资金密码");
         }
 
     }
@@ -90,12 +98,15 @@ public class TradeChangePwdActivity extends BaseActivity implements View.OnClick
                     TradeChangePwdActivity.this.type = type;
                     if (type == 0) {
                         typeTV.setText("交易密码");
-                        originalTitle.setText("交易密码");
+                        title1.setText("当前交易密码");
+                        title2.setText("新交易密码　");
+                        title3.setText("确认交易密码");
                     } else {
                         typeTV.setText("资金密码");
-                        originalTitle.setText("资金密码");
+                        title1.setText("当前资金密码");
+                        title2.setText("新资金密码　");
+                        title3.setText("确认资金密码");
                     }
-
                     popupWindows.dismiss();
                 }
             });

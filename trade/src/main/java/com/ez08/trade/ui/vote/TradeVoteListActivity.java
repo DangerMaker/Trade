@@ -50,9 +50,6 @@ public class TradeVoteListActivity extends BaseActivity implements View.OnClickL
         backBtn.setOnClickListener(this);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                context, DividerItemDecoration.HORIZONTAL));
-
         list = new ArrayList<>();
         adapter = new MyAdapter();
         recyclerView.setAdapter(adapter);
@@ -77,6 +74,7 @@ public class TradeVoteListActivity extends BaseActivity implements View.OnClickL
         request.setCallback(new Callback() {
             @Override
             public void callback(Client client, Response data) {
+                dismissBusyDialog();
                 if (data.isSucceed()) {
                     Log.e("TradeHandFragment", data.getData());
                     try {
@@ -112,6 +110,8 @@ public class TradeVoteListActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
+
+        showBusyDialog();
         ClientHelper.get().send(request);
     }
 

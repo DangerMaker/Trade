@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="5dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:background="@color/trade_little_gray"
-    android:paddingRight="5dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:orientation="horizontal">
@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:layout_marginLeft="10dp"
         android:gravity="left"
-        android:text="@string/trade_stock_name"
-        android:layout_marginLeft="12dp"
-        android:textColor="@color/trade_item_text"
+        android:text="新股名称"
+        android:textColor="@color/trade_pull_text"
         android:textSize="12dp" />
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"
-        android:text="盈亏/比例"
-        android:textColor="@color/trade_item_text"
+        android:text="中签日期"
+        android:textColor="@color/trade_pull_text"
         android:textSize="12dp" />
 
     <TextView
@@ -36,8 +36,8 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"
-        android:text="@string/trade_hand_available"
-        android:textColor="@color/trade_item_text"
+        android:text="交易所名称"
+        android:textColor="@color/trade_pull_text"
         android:textSize="12dp" />
 
     <TextView
@@ -46,7 +46,8 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"
-        android:text="@string/trade_prime_last"
-        android:textColor="@color/trade_item_text"
+        android:text="中签额度"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/trade_pull_text"
         android:textSize="12dp" />
 </LinearLayout>

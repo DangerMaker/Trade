@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ import java.util.Set;
 public class TradeQueryEntrustActivity extends BaseActivity implements View.OnClickListener, DatePickerCallback {
 
     TextView titleView;
+    ImageView backBtn;
     int UItype = 0;
 
     RecyclerView recyclerView;
@@ -74,6 +77,8 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
             UItype = getIntent().getIntExtra("type", 0);
         }
         titleView = findViewById(R.id.title);
+        backBtn = findViewById(R.id.img_back);
+        backBtn.setOnClickListener(this);
         date_layout = findViewById(R.id.date_layout);
         if (UItype == 0) {
             titleView.setText("当日委托");
@@ -201,6 +206,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
                                     entity.matchprice = var[11];
                                     entity.matchqty = var[12];
                                     entity.trddate = var[1];
+                                    entity.bsFlag = var[4];
                                     mList.add(entity);
                                 }
                                 adapter.clearAndAddAll(mList);
@@ -257,6 +263,7 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
                                     entity.matchprice = var[12];
                                     entity.matchqty = var[13];
                                     entity.trddate = var[2];
+                                    entity.bsFlag = var[4];
                                     mList.add(entity);
                                 }
                                 adapter.clearAndAddAll(mList);
@@ -404,6 +411,8 @@ public class TradeQueryEntrustActivity extends BaseActivity implements View.OnCl
             DatePickerFragment adf = DatePickerFragment.newInstance(1, closeYear, closeMonth, closeDay);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             adf.show(ft, "456");
+        }else if(v == backBtn){
+            finish();
         }
     }
 

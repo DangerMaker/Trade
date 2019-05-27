@@ -7,4 +7,5 @@ public class TradeDealEntity {
     public String matchqty; //成交数量
     public String stkname;
     public String stkcode;
+    public String bsFlag;
 }

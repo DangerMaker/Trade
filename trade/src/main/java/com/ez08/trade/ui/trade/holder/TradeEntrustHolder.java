@@ -1,6 +1,7 @@
 package com.ez08.trade.ui.trade.holder;
 
 import android.content.res.ColorStateList;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -14,7 +15,8 @@ import com.ez08.trade.ui.view.SingleLineAutoResizeTextView;
 public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
 
     TextView name;
-    SingleLineAutoResizeTextView time;
+    TextView time;
+    TextView date;
     TextView price;
     TextView num1;
     TextView num2;
@@ -26,7 +28,8 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
     public TradeEntrustHolder(ViewGroup itemView) {
         super(itemView, R.layout.trade_holder_entrust);
         name = $(R.id.txt_name);
-        time = $(R.id.txt_code);
+        time = $(R.id.time);
+        date = $(R.id.date);
         price = $(R.id.stock_entrust_price);
         num1 = $(R.id.stock_entrust_num);
         num2 = $(R.id.stock_deal_num);
@@ -41,20 +44,22 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
             String hour = data.opertime.substring(0, 2);
             String min = data.opertime.substring(2, 4);
             String sec = data.opertime.substring(4, 6);
-            String temp = data.orderdate + " ";
+            String temp = data.orderdate;
             if (temp.equals(CommonUtils.getCurrentDate())) {
-                temp = "";
+                date.setVisibility(View.GONE);
             }
-            time.setTextContent(temp + hour + ":" + min + ":" + sec);
+            date.setText(temp);
+            time.setText(hour + ":" + min + ":" + sec);
         } else if (data.opertime.length() == 7) {
             String hour = data.opertime.substring(0, 1);
             String min = data.opertime.substring(1, 3);
             String sec = data.opertime.substring(3, 5);
-            String temp = data.orderdate + " ";
+            String temp = data.orderdate;
             if (temp.equals(CommonUtils.getCurrentDate())) {
-                temp = "";
+                date.setVisibility(View.GONE);
             }
-            time.setTextContent(temp + "0" + hour + ":" + min + ":" + sec);
+            date.setText(temp);
+            time.setText("0" + hour + ":" + min + ":" + sec);
         }
         price.setText(data.orderprice);
         num1.setText(data.orderqty);
@@ -99,12 +104,14 @@ public class TradeEntrustHolder extends BaseViewHolder<TradeEntrustEntity> {
         setTextColor();
     }
 
-    private void setTextColor(){
+    private void setTextColor() {
         name.setTextColor(color);
         price.setTextColor(color);
         num1.setTextColor(color);
         num2.setTextColor(color);
         direction.setTextColor(color);
         state.setTextColor(color);
+        date.setTextColor(color);
+        time.setTextColor(color);
     }
 }

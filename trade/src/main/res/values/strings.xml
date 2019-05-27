@@ -67,7 +67,7 @@
     <string name="trade_old_pwd">原密码　　</string>
     <string name="trade_new_pwd">新密码　　</string>
     <string name="trade_confirm_pwd">确认新密码</string>
-    <string name="trade_input_pwd_hint">确认输入密码</string>
+    <string name="trade_input_pwd_hint">请输入</string>
     <string name="trade_pwd_type_funds">资金密码</string>
     <string name="trade_pwd_type_trade">交易密码</string>
 
