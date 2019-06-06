@@ -94,13 +94,13 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
         } else if (type == 3) {
             bsflag = false;
             layout = R.layout.trade_view_market_quote;
-        } else if(type == 4){
+        } else if (type == 4) {
             bsflag = true;
             layout = R.layout.trade_view_bat_quote;
-        }else if(type == 5){
+        } else if (type == 5) {
             bsflag = false;
             layout = R.layout.trade_view_bat_quote;
-        }else if(type == 6){
+        } else if (type == 6) {
             bsflag = true;
             layout = R.layout.trade_view_trans_quote;
         }
@@ -237,7 +237,7 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
     }
 
     @Override
-    public void submit(final String code, final String price,final int single, final String num, final String quoteType) {
+    public void submit(final String code, final String price, final int single, final String num, final String quoteType) {
         final String postFlag = YiChuangUtils.getTagByQuoteName(bsflag ? "B" : "S", quoteType);
         if (TextUtils.isEmpty(postFlag)) {
             CommonUtils.show(mContext, "请选择报价方式");
@@ -254,18 +254,18 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
                         "股票代码：" + stockEntity.stkcode + "  " + stockEntity.stkname + "\n" +
                         "委托价格：" + price + "\n" +
                         "委托数量：" + num + "\n" +
-                        (single == 0 ? "" : ("单笔数量：" + single + "\n") ) +
+                        (single == 0 ? "" : ("单笔数量：" + single + "\n")) +
                         "委托方式：" + quoteType + "\n" +
                         "股东代码：" + user.secuid
                 , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(single != 0){
-                            int times = Integer.parseInt(num)/single;
+                        if (single != 0) {
+                            int times = Integer.parseInt(num) / single;
                             for (int i = 0; i < times; i++) {
-                                post(code,price,single + "",postFlag);
+                                post(code, price, single + "", postFlag);
                             }
-                        }else {
+                        } else {
                             post(code, price, num, postFlag);
                         }
                     }
@@ -389,6 +389,13 @@ public class TradeBuyFragment extends BaseFragment implements OptionsDelegate {
 
         showBusyDialog();
         ClientHelper.get().send(request);
+    }
+
+    public void setStockCode(String stockCode) {
+        if (tradeViewImpl != null) {
+            tradeViewImpl.setStockCode(stockCode);
+
+        }
     }
 
 

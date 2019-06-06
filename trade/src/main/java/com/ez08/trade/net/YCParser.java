@@ -18,8 +18,7 @@ public class YCParser {
 
     public static Map<String, String> parseObject(String json) throws JSONException {
         Map<String, String> map = new HashMap<>();
-        JSONObject jsonObject;
-        jsonObject = new JSONObject(json);
+        JSONObject jsonObject = new JSONObject(json);
         String content = jsonObject.getString("content");
         Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
         Set<String> pn = uri.getQueryParameterNames();
@@ -29,9 +28,11 @@ public class YCParser {
                 String out = uri.getQueryParameter(key);
                 String[] split = out.split(";");
                 String[] title = split[0].split(",");
-                String[] var = split[1].split(",");
-                for (int i = 0; i < title.length; i++) {
-                    map.put(title[i], var[i]);
+                if(split.length > 1) {
+                    String[] var = split[1].split(",", -1);
+                    for (int i = 0; i < title.length; i++) {
+                        map.put(title[i], var[i]);
+                    }
                 }
             }
         }
@@ -41,9 +42,7 @@ public class YCParser {
 
     public static List<Map<String, String>> parseArray(String json) throws JSONException {
         List<Map<String, String>> list = new ArrayList<>();
-
-        JSONObject jsonObject;
-        jsonObject = new JSONObject(json);
+        JSONObject jsonObject = new JSONObject(json);
         String content = jsonObject.getString("content");
         Uri uri = Uri.parse(Constant.URI_DEFAULT_HELPER + content);
         Set<String> pn = uri.getQueryParameterNames();

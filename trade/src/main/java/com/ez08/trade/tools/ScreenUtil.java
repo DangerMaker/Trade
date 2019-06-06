@@ -6,6 +6,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public class ScreenUtil {
     public ScreenUtil() {
@@ -71,7 +73,17 @@ public class ScreenUtil {
         return point.y;
     }
 
-    public static ColorStateList setTextColor(Context mContext,int color) {
+    public static ColorStateList setTextColor(Context mContext, int color) {
         return mContext.getResources().getColorStateList(color);
+    }
+
+    public static void hideSoftBoard(Context context, EditText editText) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    public static void showSoftBoard(Context context, EditText editText) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 0);
     }
 }

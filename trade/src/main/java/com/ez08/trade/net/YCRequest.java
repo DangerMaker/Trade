@@ -1,5 +1,7 @@
 package com.ez08.trade.net;
 
+import android.util.Log;
+
 public class YCRequest {
 
     Callback callback;
@@ -34,13 +36,13 @@ public class YCRequest {
         if (callback == null)
             return;
 
-
-
         if (response.getPid() == 2009) {
             response.setSucceed(false);
-        }else {
+        } else {
             response.setSucceed(true);
         }
+
+        Log.e("Request receiver", response.getData());
         callback.callback(client, response);
     }
 
@@ -54,7 +56,6 @@ public class YCRequest {
     public String parse(byte[] head, byte[] body) {
         return "";
     }
-
 
 
     public static final int REQUEST_STATE_READY = 0;

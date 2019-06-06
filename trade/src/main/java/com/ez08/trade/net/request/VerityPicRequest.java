@@ -1,13 +1,15 @@
 package com.ez08.trade.net.request;
 
+import com.ez08.trade.net.NativeTools;
 import com.ez08.trade.net.SnFactory;
 import com.ez08.trade.net.YCRequest;
-import com.ez08.trade.net.NativeTools;
 
 public class VerityPicRequest extends YCRequest {
 
+    //验证码只传pid
     public VerityPicRequest() {
-        super(SnFactory.getSnClient());
+        //验证码需要传
+        super(100);
     }
 
     public void setBody(int width,int height){

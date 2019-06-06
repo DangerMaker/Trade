@@ -230,6 +230,11 @@ public class TradeMarketView extends LinearLayout implements ITradeView, View.On
         maxValue = Integer.parseInt(max);
     }
 
+    @Override
+    public void setStockCode(String code) {
+        inputCode.setText(code);
+    }
+
 
     OptionsDelegate delegate;
 

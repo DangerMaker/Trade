@@ -168,6 +168,11 @@ public class TradeBatView extends LinearLayout implements ITradeView, View.OnCli
         maxValue = Integer.parseInt(max);
     }
 
+    @Override
+    public void setStockCode(String code) {
+        inputCode.setText(code);
+    }
+
 
     OptionsDelegate delegate;
 

@@ -10,7 +10,7 @@
     <EditText
         android:id="@+id/input_code"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="@dimen/adjust_edit_text_high"
         android:gravity="center"
         android:hint="@string/trade_input_code_hit"
         android:inputType="text"
@@ -23,21 +23,21 @@
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="@dimen/adjust_edit_text_high"
         android:layout_marginTop="8dp"
         android:visibility="visible">
 
         <ImageView
             android:id="@+id/left_reduce_price"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/adjust_edit_text_high"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:padding="5dp"
             android:src="@drawable/trade_reduce" />
 
         <ImageView
             android:id="@+id/right_plus_price"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/adjust_edit_text_high"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:layout_alignParentRight="true"
             android:padding="5dp"
             android:src="@drawable/trade_plus" />
@@ -45,7 +45,7 @@
         <EditText
             android:id="@+id/trade_entrust_price"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:layout_toLeftOf="@id/right_plus_price"
             android:layout_toRightOf="@id/left_reduce_price"
             android:background="@drawable/trade_input_white_bg"
@@ -62,20 +62,20 @@
     <RelativeLayout
         android:id="@+id/layout2"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="@dimen/adjust_edit_text_high"
         android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/left_reduce_num"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/adjust_edit_text_high"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:padding="5dp"
             android:src="@drawable/trade_reduce" />
 
         <ImageView
             android:id="@+id/right_plus_num"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/adjust_edit_text_high"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:layout_alignParentRight="true"
             android:padding="5dp"
             android:src="@drawable/trade_plus" />
@@ -83,7 +83,7 @@
         <EditText
             android:id="@+id/trade_entrust_num"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="@dimen/adjust_edit_text_high"
             android:layout_toLeftOf="@id/right_plus_num"
             android:layout_toRightOf="@id/left_reduce_num"
             android:background="@drawable/trade_input_white_bg"
@@ -116,7 +116,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <TextView
@@ -180,7 +180,7 @@
     <Button
         android:id="@+id/submit"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/trade_red_corner_full"
         android:gravity="center"

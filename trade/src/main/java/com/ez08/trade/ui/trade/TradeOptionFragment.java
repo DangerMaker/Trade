@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.ez08.trade.net.Client;
 import com.ez08.trade.net.ClientHelper;
 import com.ez08.trade.net.Response;
 import com.ez08.trade.net.Callback;
+import com.ez08.trade.ui.BaseAdapter;
 import com.ez08.trade.ui.BaseFragment;
 import com.ez08.trade.ui.Interval;
 import com.ez08.trade.ui.trade.adpater.TradeActionAdapter;
@@ -34,6 +36,7 @@ import java.util.Set;
 public class TradeOptionFragment extends BaseFragment implements Interval {
     Fragment fragment;
     RecyclerView recyclerView;
+    NestedScrollView scrollView;
     LinearLayoutManager manager;
     List<Object> mList;
 
@@ -60,24 +63,24 @@ public class TradeOptionFragment extends BaseFragment implements Interval {
         type = getArguments().getInt("type");
         fragmentManager = getChildFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if(type == 0) {
+        if (type == 0) {
             fragment = TradeBuyFragment.newInstance(0);
-        }else if(type == 1){
+        } else if (type == 1) {
             fragment = TradeBuyFragment.newInstance(1);
-        }else if(type == 2){
+        } else if (type == 2) {
             fragment = TradeHandFragment.newInstance();
-        }else if(type == 3){
+        } else if (type == 3) {
             fragment = TradeBuyFragment.newInstance(2);
-        }else if(type == 4){
+        } else if (type == 4) {
             fragment = TradeBuyFragment.newInstance(3);
-        }else if(type == 5){
+        } else if (type == 5) {
             fragment = TradeBuyFragment.newInstance(4);
-        }else if(type == 6){
+        } else if (type == 6) {
             fragment = TradeBuyFragment.newInstance(5);
-        }else if(type == 7){
+        } else if (type == 7) {
             fragment = TradeBuyFragment.newInstance(6);
-        }else if(type == 8){
-            fragment = TradeBuySellFragment.newInstance();
+        } else if (type == 8) {
+            fragment = TradeBuySellFragment1.newInstance();
         }
 
         transaction.add(R.id.container, fragment);
@@ -90,9 +93,20 @@ public class TradeOptionFragment extends BaseFragment implements Interval {
         recyclerView.setAdapter(adapter);
         LinearItemDecoration divider = new LinearItemDecoration(mContext);
         recyclerView.addItemDecoration(divider);
+        scrollView = rootView.findViewById(R.id.nested_scroll);
 
         mList = new ArrayList<>();
         adapter.addAll(mList);
+        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                scrollView.scrollTo(0, 0);
+                Log.e("TradeOptionFragment", ((TradeHandEntity) mList.get(position)).stkname);
+                if (fragment instanceof TradeBuyFragment) {
+                    ((TradeBuyFragment) fragment).setStockCode(((TradeHandEntity) mList.get(position)).stkcode);
+                }
+            }
+        });
 
         getHandler();
     }

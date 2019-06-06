@@ -1,1 +1,1 @@
-include ':app', ':trade', ':socket'
+include ':app', ':trade'

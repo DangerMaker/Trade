@@ -2,13 +2,16 @@ package com.ez08.trade.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ez08.trade.R;
 import com.ez08.trade.tools.MathUtils;
@@ -40,14 +43,21 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
 
         TypedArray ta = context.obtainStyledAttributes(attrs,
                 R.styleable.AdjustEditText, 0, 0);
-
         hint = ta.getString(R.styleable.AdjustEditText_hint);
-        unit = ta.getFloat(R.styleable.AdjustEditText_unit,0.01f);
-        if(unit >= 100){
+        unit = ta.getFloat(R.styleable.AdjustEditText_unit, 0.01f);
+        color = ta.getResourceId(R.styleable.AdjustEditText_ad_color, 0);
+
+        if(color == 0){
+            color =  R.color.trade_pull_text;
+        }
+
+        if (unit >= 100) {
             exp = 2;
-        }else{
+        } else {
             exp = 4;
         }
+
+        ta.recycle();
 
         inflate(context, R.layout.trade_view_adjust, this);
         plus = findViewById(R.id.plus);
@@ -64,6 +74,7 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
         line6 = findViewById(R.id.line6);
 
         edit.setHint(hint);
+        edit.setTextSize(TypedValue.COMPLEX_UNIT_DIP,15);
         setColor(color);
     }
 
@@ -80,12 +91,11 @@ public class AdjustEditText extends RelativeLayout implements View.OnClickListen
     }
 
 
-
     public void setText(String text) {
         if (Double.parseDouble(text) < unit) {
             plus.setClickable(false);
             reduce.setClickable(false);
-        }else{
+        } else {
             plus.setClickable(true);
             reduce.setClickable(true);
         }

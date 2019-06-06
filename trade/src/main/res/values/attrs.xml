@@ -162,5 +162,6 @@
     <declare-styleable name="AdjustEditText">
         <attr name="hint" format="string"/>
         <attr name="unit" format="float"/>
+        <attr name="ad_color" format="reference"/>
     </declare-styleable>
 </resources>

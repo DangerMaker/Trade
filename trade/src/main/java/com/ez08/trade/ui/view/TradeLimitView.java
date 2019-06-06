@@ -265,6 +265,11 @@ public class TradeLimitView extends LinearLayout implements ITradeView, View.OnC
         maxValue = Integer.parseInt(max);
     }
 
+    @Override
+    public void setStockCode(String code) {
+        inputCode.setText(code);
+    }
+
 
     OptionsDelegate delegate;
 

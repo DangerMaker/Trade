@@ -4,6 +4,6 @@
 
     <corners android:radius="1dip" />
 
-    <stroke android:color="@color/trade_red" android:width="1dp" />
+    <stroke android:color="@color/trade_input" android:width="1dp" />
 
 </shape>
